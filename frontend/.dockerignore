@@ -1,0 +1,11 @@
+# Ignore Node.js build output
+**/node_modules/
+.next/
+
+# Ignore Docker files that shouldn't be copied
+docker-compose*
+Dockerfile*
+
+.gitignore
+.vscode/
+.idea/
