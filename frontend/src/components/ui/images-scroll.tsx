@@ -12,19 +12,11 @@ export default function ImagesScroll({ className, images }: ImagesScrollProps) {
   const [currIndex, setCurrIndex] = useState<number>(0);
   const [fade, setFade] = useState<boolean>(true);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext();
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [images]);
-
-  function handlePrev() {
+  function handlePrev(currIndex: number) {
     const newIndex = (currIndex - 1 + images.length) % images.length;
     handleChangeIndex(newIndex);
   }
-  function handleNext() {
+  function handleNext(currIndex: number) {
     const newIndex = (currIndex + 1) % images.length;
     handleChangeIndex(newIndex);
   }
@@ -37,6 +29,15 @@ export default function ImagesScroll({ className, images }: ImagesScrollProps) {
       setFade(true);
     }, 500);
   }
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      handleNext(currIndex);
+      clearTimeout(interval);
+    }, 10000);
+
+    return () => clearTimeout(interval);
+  }, [images, currIndex]);
 
   return (
     <div className={`${className} relative overflow-x-hidden group`}>
@@ -61,13 +62,13 @@ export default function ImagesScroll({ className, images }: ImagesScrollProps) {
         ))}
       </div>
       <button
-        onClick={handlePrev}
+        onClick={() => handlePrev(currIndex)}
         className="absolute top-1/2 left-0 -translate-y-1/2 group-hover:opacity-100 opacity-0 transition-opacity hover:text-black text-white"
       >
         <MdKeyboardArrowLeft size={30} />
       </button>
       <button
-        onClick={handleNext}
+        onClick={() => handleNext(currIndex)}
         className="absolute top-1/2 right-0 -translate-y-1/2 group-hover:opacity-100 opacity-0 transition-opacity hover:text-black text-white"
       >
         <MdKeyboardArrowRight size={30} />
