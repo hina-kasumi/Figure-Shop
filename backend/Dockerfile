@@ -17,7 +17,6 @@ WORKDIR /app
 
 # Copy publish + views
 COPY --from=build /app/publish .
-COPY --from=build /src/Views ./Views
 COPY --from=build /src/wwwroot ./wwwroot
 
 EXPOSE 8080
