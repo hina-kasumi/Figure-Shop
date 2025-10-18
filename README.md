@@ -94,17 +94,16 @@ Dự án backend ASP.NET Core cần tuân thủ kiến trúc **3 Layer** nhằm 
 
 ```text
 FigureShop/
-│── FigureShop.API/
-│ └── Controllers/
+│── Controllers/
 │
-│── FigureShop.Application/
-│ ├── Interfaces/
-│ ├── Services/
-│ └── DTOs/
+│── Services/
 │
-│── FigureShop.Infrastructure/
-│ ├── Data/
-│ ├── Entities/
-│ ├── Interfaces/
-│ └── Repositories/
+│── Repositories/
+│
+│── Entities/
+│
+│── Repository/
+│
+│── Utils/
+
 ```
