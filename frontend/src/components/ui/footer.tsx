@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 import { SiZalo } from "react-icons/si";
 
@@ -39,12 +40,6 @@ export default function Footer() {
             <li>📞 0396 686 826</li>
             <li>✉️ contact@jhfigure.com</li>
           </ul>
-
-          <img
-            src="/bo-cong-thuong.png"
-            alt="Bộ Công Thương"
-            className="mt-3 w-32"
-          />
         </div>
 
         {/* Cột 2 - Chính sách */}
@@ -98,11 +93,14 @@ export default function Footer() {
           <h4 className="font-semibold mt-5 mb-2 uppercase">
             Phương thức thanh toán
           </h4>
-          <img
-            src="/footer_trustbadge.png"
-            alt="Payment methods"
-            className="w-40"
-          />
+          <div className="relative w-40">
+            <Image
+              src="/footer_trustbadge.png"
+              alt="Payment methods"
+              objectFit="contain"
+              fill
+            />
+          </div>
 
           {/* Icon mạng xã hội */}
           <div className="flex items-center gap-3 mt-4 text-lg">

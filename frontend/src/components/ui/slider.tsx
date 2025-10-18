@@ -11,18 +11,23 @@ const items = [
   {
     icon: <CiGift size={size} />,
     name: "NEW RELEASES !!!",
-    link: "/",
+    link: "/collections",
   },
   {
     icon: <AiOutlineProduct size={size} />,
     name: "ALL PRODUCTS",
-    link: "/",
+    link: "/collections",
   },
   {
     icon: <MdOutlineLocalPolice size={size} />,
     name: "Khách hàng thân thiết",
     link: "/",
   },
+];
+
+const banners = [
+  "https://file.hstatic.net/200000462939/file/freeshipping.jpg",
+  "https://file.hstatic.net/200000462939/file/figure_san_ship_ngay.jpg",
 ];
 
 interface SliderProps {
@@ -46,10 +51,7 @@ export default function Slider({ className }: SliderProps) {
       </div>
       <ImagesScroll
         className="flex-1 ml-4 mt-4"
-        images={[
-          "https://file.hstatic.net/200000462939/file/freeshipping.jpg",
-          "https://file.hstatic.net/200000462939/file/figure_san_ship_ngay.jpg",
-        ]}
+        images={banners}
       />
     </div>
   );
