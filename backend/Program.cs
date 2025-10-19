@@ -25,6 +25,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<FigureRepository>();
+builder.Services.AddScoped<FigureService>();
 
 // builder.Services.AddControllers(options =>
 // {
