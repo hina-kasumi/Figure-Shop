@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers;
 
 [ApiController]
-[Route("fig")]
+[Route("/fig")]
 public class FigureController : ControllerBase
 {
     private readonly FigureService _figureService;
@@ -36,7 +36,7 @@ public class FigureController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateFigure([FromBody] CreateFigure dto)
+    public async Task<IActionResult> CreateFigure([FromBody] CreateFigureRequest dto)
     {
         var newFigure = await _figureService.CreateFigureAsync(dto);
         return CreatedAtAction(nameof(GetFigureById), new { id = newFigure.Id }, newFigure);
@@ -44,7 +44,7 @@ public class FigureController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateFigure(Guid id, [FromBody] UpdateFigure dto)
+    public async Task<IActionResult> UpdateFigure(Guid id, [FromBody] UpdateFigureRequest dto)
     {
         var success = await _figureService.UpdateFigureAsync(id, dto);
         if (!success)

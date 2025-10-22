@@ -23,7 +23,7 @@ public class FigureService
         return await _figureRepository.GetByIdWithDetailsAsync(id);
     }
     
-    public async Task<Figure> CreateFigureAsync(CreateFigure dto)
+    public async Task<Figure> CreateFigureAsync(CreateFigureRequest dto)
     {
         var newFigure = new Figure
         {
@@ -47,7 +47,7 @@ public class FigureService
         return newFigure;
     }
     
-    public async Task<bool> UpdateFigureAsync(Guid id, UpdateFigure dto)
+    public async Task<bool> UpdateFigureAsync(Guid id, UpdateFigureRequest dto)
     {
         var existingFigure = await _figureRepository.GetByIdAsync(id);
         if (existingFigure is null)

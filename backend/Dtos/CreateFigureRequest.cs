@@ -2,7 +2,7 @@
 
 namespace backend.Dtos;
 
-public class CreateFigure
+public class CreateFigureRequest
 {
     [Required]
     [MaxLength(255)]

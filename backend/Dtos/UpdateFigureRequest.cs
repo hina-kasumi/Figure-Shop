@@ -2,7 +2,7 @@
 
 namespace backend.Dtos;
 
-public class UpdateFigure
+public class UpdateFigureRequest
 {
     [MaxLength(255)]
     public string? Name { get; set; }
