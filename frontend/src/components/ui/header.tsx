@@ -8,9 +8,11 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 import { IoIosArrowDown } from "react-icons/io";
 import Logo from "./logo";
 import SearchBar from "./search-bar";
+import Cart from "./cart";
 
 export default function Header() {
   const [items] = useState(0);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <div className="">
@@ -27,7 +29,10 @@ export default function Header() {
               <p>0123456789</p>
             </div>
           </div>
-          <button className="flex items-center gap-2 cursor-pointer">
+          <Link
+            href="/login"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <FaRegUser size={30} />
             <div className="hidden lg:block text-sm">
               <p>Đăng nhập</p>
@@ -36,8 +41,11 @@ export default function Header() {
                 <IoIosArrowDown />
               </p>
             </div>
-          </button>
-          <button className="flex items-center gap-2 cursor-pointer p-2 rounded-xl border-2">
+          </Link>
+          <div
+            className="md:relative flex items-center gap-2 cursor-pointer p-2 rounded-xl border-2"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             <div className="relative">
               <HiOutlineShoppingCart size={30} />
               <div className="absolute flex items-center justify-center right-0 top-0 h-4 w-4 bg-red-600 p-1 text-xs rounded-full">
@@ -45,7 +53,14 @@ export default function Header() {
               </div>
             </div>
             <div className="hidden lg:block text-xl">Giỏ hàng</div>
-          </button>
+            <div onClick={(e) => e.stopPropagation()}>
+              <Cart
+                className={`absolute right-0 z-10 w-full md:top-full md:w-xl ${
+                  isOpen ? "" : "hidden"
+                }`}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

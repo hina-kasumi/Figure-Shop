@@ -40,8 +40,8 @@ const navItems = [
 
 export default function Navbar({ className }: NavbarProps) {
   return (
-    <div className={`${className} flex items-center gap-3 bg-theme-200 text-black flex-wrap`}>
-      <div className="flex items-center gap-1 p-2 hover:bg-theme-200 bg-black text-background w-[20vw] min-w-16">
+    <div className={`${className} flex items-center gap-3 text-black flex-wrap`}>
+      <div className="flex items-center gap-1 p-2 bg-black text-background w-[20vw] min-w-16">
         <div>
           <CiGrid41 size={size} />
         </div>
@@ -51,7 +51,7 @@ export default function Navbar({ className }: NavbarProps) {
         <Link
           href={item.link}
           key={item.name}
-          className="flex items-center gap-1 p-2 hover:bg-theme-200 cursor-pointer hover:text-theme-400 transition-all"
+          className="flex items-center gap-1 p-2 cursor-pointer hover:text-theme-400 transition-all"
         >
           <div>{item.icon}</div>
           <div>{item.name}</div>
