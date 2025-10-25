@@ -8,7 +8,9 @@ public class UserRepository(AppDbContext context)
 {
     public async Task<User?> GetUserByEmail(string email)
     {
-        return await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);
+        return await context.Users
+            .Include(u => u.Roles)
+            .FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<User> CreateUser(string email, string password, string status, Role[]  roles)
@@ -36,5 +38,35 @@ public class UserRepository(AppDbContext context)
         
         await context.SaveChangesAsync();
         return user;
+    }
+    
+    public async Task<User?> GetUserByIdWithRole(Guid id)
+    {
+        return await context.Users
+            .Include(u => u.Roles)
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+    
+    public async Task<User?> GetUserById(Guid id)
+    {
+        return await context.Users.FindAsync(id);
+    }
+    
+    public async Task<Role?> GetRoleByName(string roleName)
+    {
+        return await context.Roles
+            .FirstOrDefaultAsync(r => r.Name == roleName);
+    }
+    
+    public async Task<IEnumerable<User>> GetAllUsers()
+    {
+        return await context.Users
+            .Include(u => u.Roles)
+            .ToListAsync();
+    }
+    
+    public async Task<int> SaveChangesAsync()
+    {
+        return await context.SaveChangesAsync();
     }
 }
