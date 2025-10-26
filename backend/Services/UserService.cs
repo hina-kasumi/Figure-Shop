@@ -23,7 +23,7 @@ public class UserService (UserRepository userRepository)
         var user = await userRepository.GetUserById(userId);
         if (user is null)
         {
-            return false; // Không tìm thấy user
+            return false;
         }
 
         user.Status = ban ? StatusEnum.Banned : StatusEnum.Active;
@@ -56,6 +56,11 @@ public class UserService (UserRepository userRepository)
         
         await userRepository.SaveChangesAsync();
         return grant ? "Role granted successfully." : "Role revoked successfully.";
+    }
+    
+    public async Task<Role?> GetRoleByName(string roleName)
+    {
+        return await userRepository.GetRoleByName(roleName);
     }
     
     public async Task<IEnumerable<User>> GetAllUsers()

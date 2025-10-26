@@ -13,9 +13,37 @@ public class FigureService
         _figureRepository = figureRepository;
     }
     
-    public async Task<IEnumerable<Figure>> GetAllFiguresAsync()
+    public async Task<IEnumerable<FigureRequest>> GetAllFiguresAsync()
     {
-        return await _figureRepository.GetAllAsync();
+        var figures = await _figureRepository.GetAllAsync();
+
+        var figureRequest = figures.Select(f => new FigureRequest
+        {
+            Id = f.Id,
+            Name = f.Name,
+            Price = f.Price,
+            ImgSrc = f.ImgSrc,
+            SalePercent = f.SalePercent,
+            Quantity = f.Quantity,
+            Description = f.Description,
+            Vote = f.Vote,
+            Branch = f.Branch == null
+                ? null
+                : new BranchRequest()
+                {
+                    Id = f.Branch.Id,
+                    Name = f.Branch.Name
+                },
+            Category = f.Category == null
+                ? null
+                : new CategoryRequest()
+                {
+                    Id = f.Category.Id,
+                    Name = f.Category.Name
+                }
+        });
+
+        return figureRequest;
     }
 
     public async Task<Figure?> GetFigureByIdAsync(Guid id)
