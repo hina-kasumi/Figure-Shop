@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using backend.Dtos;
 using backend.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,6 +67,7 @@ public class FigureRepository
         double? minPrice, 
         double? maxPrice, 
         Guid? branchId, 
+        Guid? categoryId, 
         string? sortBy)
     {
         var query = _context.Figures.AsQueryable();
@@ -88,6 +90,11 @@ public class FigureRepository
         if (branchId.HasValue)
         {
             query = query.Where(f => f.BranchId == branchId.Value);
+        }
+
+        if (categoryId.HasValue)
+        {
+            query = query.Where(f => f.CategoryId == categoryId.Value);
         }
 
         if (sortBy == "purchased_desc")
@@ -123,5 +130,29 @@ public class FigureRepository
         }
         
         return await query.ToListAsync();
+    }
+
+    public async Task<IEnumerable<SoldFigureRequest>> GetSoldFigureReport()
+    {
+        var report = await _context.OrderFigures.GroupBy(of => of.FigureId)
+            .Select(g => new
+            {
+                FigureId = g.Key,
+                TotalQuantitySold = g.Sum(of => of.Quantity)
+            })
+            .Join(
+                _context.Figures,
+                reportItem => reportItem.FigureId,
+                figure => figure.Id,
+                (reportItem, figure) => new SoldFigureRequest
+                {
+                    FigureId = reportItem.FigureId,
+                    FigureName = figure.Name,
+                    TotalQuantitySold = reportItem.TotalQuantitySold
+                }
+            )
+            .OrderByDescending(request => request.TotalQuantitySold)
+            .ToListAsync();
+        return report;
     }
 }

@@ -34,13 +34,9 @@ public class AuthService
         if (user != null)
             throw new Exception("User is already registered");
 
+        var userRole = await _userService.GetRoleByName("USER");
         user = await _userService.CreateUser(email, password, nameof(StatusEnum.Active), new[]
-        {
-            new Role()
-            {
-                Name = "USER"
-            }
-        });
+        { userRole ?? throw new Exception("User role not found")});
 
         return GenToken(user);
     }
@@ -50,20 +46,24 @@ public class AuthService
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Email),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var roles = string.Empty;
-        user.Roles.ToList().ForEach(role => { roles += role.Name + " "; });
-        claims.Add(new Claim("roles", roles));
+        foreach (var role in user.Roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role.Name));
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             claims: claims,
+            //expires: DateTime.Now.AddHours(2),
             signingCredentials: creds
         );
-
+        
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

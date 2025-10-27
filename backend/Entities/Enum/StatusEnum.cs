@@ -10,8 +10,9 @@ public enum StatusEnum
 
 public enum OrderStatusEnum
 {
-    Rejected,
-    Waiting,
+    Pending,
+    Processing,
     Shipping,
-    Delivered,
+    Completed,
+    Cancelled
 }
