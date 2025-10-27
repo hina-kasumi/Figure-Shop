@@ -31,6 +31,8 @@ builder.Services.AddScoped<CategoryRepository>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<BranchRepository>();
 builder.Services.AddScoped<BranchService>();
+builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<OrderService>();
 
 // builder.Services.AddControllers(options =>
 // {

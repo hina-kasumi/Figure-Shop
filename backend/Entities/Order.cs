@@ -16,6 +16,6 @@ public class Order : BaseEntity
     [MaxLength(255)]
     public required string Address {get; set;}
 
-    public OrderFigure[] OrderFigures { get; set; } = [];
+    public ICollection<OrderFigure> OrderFigures { get; set; } = new List<OrderFigure>();
     public Voucher Voucher { get; set; }
 }

@@ -126,7 +126,13 @@ public class FigureService
             request.MinPrice,
             request.MaxPrice,
             request.BranchId,
+            request.CategoryId,
             request.SortBy
         );
+    }
+    
+    public async Task<IEnumerable<SoldFigureRequest>> GetSalesStatisticsAsync()
+    {
+        return await _figureRepository.GetSoldFigureReport();
     }
 }

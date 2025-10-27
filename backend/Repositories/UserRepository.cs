@@ -52,6 +52,13 @@ public class UserRepository(AppDbContext context)
         return await context.Users.FindAsync(id);
     }
     
+    public async Task<IEnumerable<User>> GetUsersByIds(IEnumerable<Guid> userIds)
+    {
+        return await context.Users
+            .Where(u => userIds.Contains(u.Id))
+            .ToListAsync();
+    }
+    
     public async Task<Role?> GetRoleByName(string roleName)
     {
         return await context.Roles
