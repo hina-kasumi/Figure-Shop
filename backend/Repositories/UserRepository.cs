@@ -1,3 +1,4 @@
+using backend.Dtos;
 using backend.Entities;
 using backend.Entities.Enum;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +70,53 @@ public class UserRepository(AppDbContext context)
     {
         return await context.Users
             .Include(u => u.Roles)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<UserReport>> GetUsersReport(string? email, string? sortBy)
+    {
+        var baseQuery = context.Users
+            .Where(u => u.Roles.Any(r => r.Name == "USER"));
+        
+        var reportQuery = baseQuery
+            .Select(u => new
+            {
+                User = u,
+                TotalSpent = context.Orders
+                    .Where(o => o.UserId == u.Id)
+                    .Sum(o => (double?)o.PaidPrice) ?? 0,
+                TotalItemsPurchased = context.OrderFigures
+                    .Where(of => of.UserId == u.Id)
+                    .Sum(of => (int?)of.Quantity) ?? 0
+            });
+
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            reportQuery = reportQuery.Where(r => r.User.Email.Contains(email));
+        }
+
+        switch (sortBy)
+        {
+            case "spent_desc":
+                reportQuery = reportQuery.OrderByDescending(r => r.TotalSpent);
+                break;
+            case "items_desc":
+                reportQuery = reportQuery.OrderByDescending(r => r.TotalItemsPurchased);
+                break;
+            default:
+                reportQuery = reportQuery.OrderBy(r => r.User.Email);
+                break;
+        }
+
+        return await reportQuery
+            .Select(r => new UserReport
+            {
+                Id = r.User.Id,
+                Email = r.User.Email,
+                Status = r.User.Status,
+                TotalSpent = r.TotalSpent,
+                TotalItemsPurchased = r.TotalItemsPurchased
+            })
             .ToListAsync();
     }
     

@@ -87,4 +87,11 @@ public class AdminController : ControllerBase
         if (!success) return NotFound("Order not found.");
         return NoContent();   
     }
+
+    [HttpGet("users/report")]
+    public async Task<IActionResult> GetUserReport([FromQuery] SearchUserRequest request)
+    {
+        var report = await _userService.GetUsersReport(request);
+        return Ok(report);
+    }
 }

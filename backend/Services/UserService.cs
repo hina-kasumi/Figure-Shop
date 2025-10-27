@@ -1,3 +1,4 @@
+using backend.Dtos;
 using backend.Entities;
 using backend.Entities.Enum;
 using backend.Repositories;
@@ -44,6 +45,7 @@ public class UserService (UserRepository userRepository)
         {
             if (user.Roles.Any(r => r.Name == roleName))
                 return "User already has this role.";
+            user.Roles.Clear();
             user.Roles.Add(role);
         }
         else
@@ -52,10 +54,23 @@ public class UserService (UserRepository userRepository)
             if(roleToRemove is null)
                 return "User does not have this role.";
             user.Roles.Remove(roleToRemove);
+
+            if (!user.Roles.Any())
+            {
+                var defaultRole = await userRepository.GetRoleByName("USER");
+                user.Roles.Add(defaultRole);
+                await userRepository.SaveChangesAsync();
+                return "Role revoked. User had no roles left, 'USER' role was assigned as default.";
+            }
         }
         
         await userRepository.SaveChangesAsync();
         return grant ? "Role granted successfully." : "Role revoked successfully.";
+    }
+
+    public async Task<IEnumerable<UserReport>> GetUsersReport(SearchUserRequest request)
+    {
+        return await userRepository.GetUsersReport(request.Email, request.SortBy);
     }
     
     public async Task<Role?> GetRoleByName(string roleName)
