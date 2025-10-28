@@ -7,7 +7,7 @@ namespace backend.Entities;
 public class Order : BaseEntity
 {
     public required Guid UserId  { get; set; }
-    public Guid VoucherId { get; set; }
+    public Guid? VoucherId { get; set; }
     public OrderStatusEnum  Status { get; set; }
     public double TotalPrice { get; set; }
     public double PaidPrice { get; set; }
