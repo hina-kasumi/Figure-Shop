@@ -1,11 +1,12 @@
 "use client";
 
+import { FigureCardInformation } from "@/types/figure";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Box from "../ui/box";
-import TickerBox from "../ui/ticker-box";
-import { FigureCardInformation } from "@/types/figure";
 import FigureCard from "../ui/figure-card";
 import Pagination from "../ui/pagination";
+import TickerBox from "../ui/ticker-box";
 
 const branchs = [
   {
@@ -36,11 +37,14 @@ const branchs = [
 
 const figures: FigureCardInformation[] = [
   {
-    id: 1,
+    id: "1",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    image:
+    images: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
+    ],
     status: "In Stock",
+    branch: "Apex Innovation",
+    category: "Figure",
     price: 29.99,
     salePercent: 2,
     rating: 4.5,
@@ -50,11 +54,14 @@ const figures: FigureCardInformation[] = [
     updatedAt: "2023-01-02T00:00:00Z",
   },
   {
-    id: 2,
+    id: "2",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    image:
+    images: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
+    ],
     status: "In Stock",
+    branch: "Apex Innovation",
+    category: "Figure",
     price: 29.99,
     salePercent: 0,
     rating: 4.5,
@@ -64,11 +71,14 @@ const figures: FigureCardInformation[] = [
     updatedAt: "2023-01-02T00:00:00Z",
   },
   {
-    id: 3,
+    id: "3",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    image:
+    images: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
+    ],
     status: "In Stock",
+    branch: "Apex Innovation",
+    category: "Figure",
     price: 29.99,
     salePercent: 0,
     rating: 4.5,
@@ -108,6 +118,19 @@ const sortList = [
 
 export default function CollectionsPage() {
   const [ticked, setTicked] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const page = parseInt(searchParams.get("page") || "1", 10);
+
+  function handlePageChange(newPage: number) {
+    // Tạo object mới từ URLSearchParams cũ
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());    
+
+    // Điều hướng tới URL mới mà không reload trang
+    router.push(`${pathname}?${params.toString()}`);
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
@@ -162,8 +185,8 @@ export default function CollectionsPage() {
         <Pagination
           className="mt-4"
           totalPages={20}
-          currentPage={6}
-          onPageChange={(page) => console.log("Change to page:", page)}
+          currentPage={page}
+          onPageChange={handlePageChange}
         />
       </Box>
     </div>

@@ -1,7 +1,10 @@
 export interface FigureCardInformation {
-  id: number;
+  id: string;
   name: string;
-  image: string;
+  images: string[];
+  branch: string;
+  description?: string;
+  category: string;
   status: string;
   price: number;
   salePercent?: number;
@@ -11,3 +14,21 @@ export interface FigureCardInformation {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CommentType {
+  userID: string;
+  name: string;
+  vote: number;
+  content: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export type CartItem = {
+  figureId: string;
+  name: string;
+  image: string;
+  price: number;
+  maxQuantity: number;
+  quantity: number;
+};
