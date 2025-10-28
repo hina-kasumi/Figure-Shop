@@ -142,7 +142,7 @@ export default function Cart({ className }: CartProps) {
 
           {/* Nút thanh toán */}
           <Link
-            href="/"
+            href="/checkout"
             className="text-center block w-full bg-theme-400 hover:bg-theme-500 text-white font-semibold py-2 rounded-lg mt-4 transition"
           >
             Thanh toán

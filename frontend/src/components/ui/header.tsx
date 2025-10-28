@@ -9,10 +9,14 @@ import { IoIosArrowDown } from "react-icons/io";
 import Logo from "./logo";
 import SearchBar from "./search-bar";
 import Cart from "./cart";
+import { useToken } from "@/hooks/token";
+import { CgProfile } from "react-icons/cg";
 
 export default function Header() {
   const [items] = useState(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const { token, removeToken } = useToken();
 
   return (
     <div className="">
@@ -29,19 +33,42 @@ export default function Header() {
               <p>0123456789</p>
             </div>
           </div>
-          <Link
-            href="/login"
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <FaRegUser size={30} />
-            <div className="hidden lg:block text-sm">
-              <p>Đăng nhập</p>
-              <p className="flex items-center gap-1">
-                Đăng ký
-                <IoIosArrowDown />
-              </p>
+          {!token ? (
+            <div className="relative flex items-center">
+              <CgProfile
+                size={30}
+                className="cursor-pointer"
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+              />
+              {isProfileOpen && (
+                <div className="absolute grid text-center top-full rounded right-0 z-10 bg-white w-48 border shadow text-black overflow-hidden cursor-pointer">
+                  <Link
+                    href="/profile"
+                    className="px-4 py-2 hover:bg-theme-100"
+                  >
+                    Quản lý tài khoản
+                  </Link>
+                  <button onClick={removeToken} className="px-4 py-2 hover:bg-theme-100 cursor-pointer">
+                    Đăng xuất
+                  </button>
+                </div>
+              )}
             </div>
-          </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <FaRegUser size={30} />
+              <div className="hidden lg:block text-sm">
+                <p>Đăng nhập</p>
+                <p className="flex items-center gap-1">
+                  Đăng ký
+                  <IoIosArrowDown />
+                </p>
+              </div>
+            </Link>
+          )}
           <div
             className="md:relative flex items-center gap-2 cursor-pointer p-2 rounded-xl border-2"
             onClick={() => setIsOpen(!isOpen)}
@@ -55,7 +82,7 @@ export default function Header() {
             <div className="hidden lg:block text-xl">Giỏ hàng</div>
             <div onClick={(e) => e.stopPropagation()}>
               <Cart
-                className={`absolute right-0 z-10 w-full md:top-full md:w-xl ${
+                className={`absolute right-0 z-10 w-full md:top-full md:w-xl cursor-default ${
                   isOpen ? "" : "hidden"
                 }`}
               />
