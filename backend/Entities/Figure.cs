@@ -47,5 +47,5 @@ public class Figure : BaseEntity
 
     public Branch? Branch { get; set; }
     public Category? Category { get; set; }
-    public ICollection<Comment> Comments { get; set; } = [];
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

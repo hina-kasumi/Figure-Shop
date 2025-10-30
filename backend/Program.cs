@@ -40,6 +40,10 @@ builder.Services.AddScoped<BranchRepository>();
 builder.Services.AddScoped<BranchService>();
 builder.Services.AddScoped<OrderRepository>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<VoucherRepository>();
+builder.Services.AddScoped<VoucherService>();
+builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddScoped<CommentService>();
 
 // builder.Services.AddControllers(options =>
 // {
