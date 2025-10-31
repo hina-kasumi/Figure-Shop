@@ -21,7 +21,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<User>().Property(u => u.Status).HasConversion<string>();
         modelBuilder.Entity<Order>().Property(o => o.Status).HasConversion<string>();
         modelBuilder.Entity<ShoppingCart>().HasKey(sp => new { sp.FigureId, sp.UserId });
-        modelBuilder.Entity<Comment>().HasKey(c => new { c.FigureId, c.UserId });
         modelBuilder.Entity<OrderFigure>().HasKey(o => new { o.FigureId, o.UserId });
         
         

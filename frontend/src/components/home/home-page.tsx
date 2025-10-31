@@ -8,10 +8,13 @@ import Link from "next/link";
 
 const figures: FigureCardInformation[] = [
   {
-    id: 1,
+    id: "1",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    image:
+    images: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
+    ],
+    branch: "Apex Innovation",
+    category: "Figure",
     status: "In Stock",
     price: 29.99,
     salePercent: 2,
@@ -22,10 +25,13 @@ const figures: FigureCardInformation[] = [
     updatedAt: "2023-01-02T00:00:00Z",
   },
   {
-    id: 2,
+    id: "2",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    image:
+    images: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
+    ],
+    branch: "Apex Innovation",
+    category: "Figure",
     status: "In Stock",
     price: 29.99,
     salePercent: 0,
@@ -36,10 +42,13 @@ const figures: FigureCardInformation[] = [
     updatedAt: "2023-01-02T00:00:00Z",
   },
   {
-    id: 3,
+    id: "3",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    image:
+    images: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
+    ],
+    branch: "Apex Innovation",
+    category: "Figure",
     status: "In Stock",
     price: 29.99,
     salePercent: 0,

@@ -9,5 +9,7 @@ public class SearchFigureRequest
     
     public Guid? BranchId { get; set; }
     
+    public Guid? CategoryId { get; set; }
+    
     public string? SortBy { get; set; }
 }
