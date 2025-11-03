@@ -2,25 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRegister } from "@/hooks/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { func, isLoading } = useRegister();
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (password !== confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp!");
-      return;
-    }
-
-    // Ở đây bạn có thể gọi API để đăng ký thật
-    alert("Đăng ký thành công!");
-    router.push("/login");
+    func({ email, password, confirmPassword })
+      .then((message) => {
+        alert(message);
+        router.push("/");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
 
   return (
@@ -31,22 +31,6 @@ export default function RegisterPage() {
         </h2>
 
         <form onSubmit={handleRegister} className="space-y-5">
-          {/* Họ tên */}
-          <div>
-            <label htmlFor="name" className="block text-gray-700 mb-1">
-              Họ và tên
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Nhập họ và tên..."
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-theme-300 outline-none"
-              required
-            />
-          </div>
-
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-gray-700 mb-1">
@@ -102,6 +86,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             className="w-full bg-theme-400 hover:bg-theme-500 text-white font-semibold py-2 rounded-lg transition"
+            disabled={isLoading}
           >
             Đăng ký
           </button>

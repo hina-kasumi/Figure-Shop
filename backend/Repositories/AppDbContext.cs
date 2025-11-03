@@ -45,7 +45,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasMany<ShoppingCart>()
             .WithOne()
             .HasForeignKey(x => x.UserId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<ShoppingCart>()
+            .HasOne(c => c.Figure)
+            .WithMany()
+            .HasForeignKey(c => c.FigureId);
+        
+        modelBuilder.Entity<ShoppingCart>()
+            .HasOne<User>()
+            .WithMany(u => u.ShoppingCarts)
+            .HasForeignKey(c => c.UserId)
+            .IsRequired();
 
         modelBuilder.Entity<Branch>()
             .HasMany(b => b.Figures)
@@ -67,8 +79,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         
         modelBuilder.Entity<Figure>()
             .HasMany<ShoppingCart>()
-            .WithOne()
+            .WithOne(s => s.Figure)
             .HasForeignKey(f => f.FigureId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         
         modelBuilder.Entity<Figure>()

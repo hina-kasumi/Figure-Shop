@@ -1,5 +1,6 @@
 "use client";
 
+import { useLogin } from "@/hooks/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -7,15 +8,19 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { func, isLoading } = useLogin();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "admin@example.com" && password === "123456") {
-      alert("Đăng nhập thành công!");
-      router.push("/");
-    } else {
-      alert("Sai email hoặc mật khẩu!");
-    }
+
+    func({ email, password })
+      .then((message) => {
+        alert(message);
+        router.push("/");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
 
   return (
@@ -65,6 +70,7 @@ export default function LoginPage() {
           <button
             type="submit"
             className="w-full bg-theme-400 hover:bg-theme-500 text-white font-semibold py-2 rounded-lg transition"
+            disabled={isLoading}
           >
             Đăng nhập
           </button>

@@ -33,7 +33,7 @@ export default function Header() {
               <p>0123456789</p>
             </div>
           </div>
-          {!token ? (
+          {token ? (
             <div className="relative flex items-center">
               <CgProfile
                 size={30}

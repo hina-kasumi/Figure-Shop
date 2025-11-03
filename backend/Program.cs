@@ -11,6 +11,18 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+
 // Cấu hình DbContext dùng DI container
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -100,6 +112,7 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger"; // Truy cập tại http://localhost:<port>/swagger
 });
 
+app.UseCors("AllowAll");
 
 app.UseStaticFiles();
 
