@@ -49,10 +49,10 @@ public class CommentController (CommentService commentService) : ControllerBase
                 Content = comment.Content,
                 CreatedAt = comment.CreatedAt,
                 User = new UserSummary
-                    { Id = userId, Email = User.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? "N/A" }
+                    { Id = userId, Email = User.FindFirstValue(ClaimTypes.Email) ?? "N/A" }
             };
             
-            Console.WriteLine($"[INFO] Email: {User.FindFirstValue(JwtRegisteredClaimNames.Sub)}");
+            Console.WriteLine($"[INFO] Email: {User.FindFirstValue(ClaimTypes.Email)}");
             
             return CreatedAtAction(nameof(GetCommentsForFigure), new {figureId = figureId, id = comment.Id}, dtoResponse);
         }
@@ -65,9 +65,9 @@ public class CommentController (CommentService commentService) : ControllerBase
 
     [HttpPut("{commentId}")]
     [Authorize]
-    public async Task<IActionResult> UpdateComment(Guid id, [FromBody] UpdateCommentRequest request, Guid figureId)
+    public async Task<IActionResult> UpdateComment(Guid commentId, [FromBody] UpdateCommentRequest request, Guid figureId)
     {
-        var result = await commentService.UpdateComment(id, request, GetUserId(), GetUserRoles(), figureId);
+        var result = await commentService.UpdateComment(commentId, request, GetUserId(), GetUserRoles(), figureId);
         
         if(result == "Not found") return NotFound("Comment not found.");
         if(result == "Forbidden") return Forbid("Forbidden.");
@@ -75,9 +75,9 @@ public class CommentController (CommentService commentService) : ControllerBase
     }
 
     [HttpDelete("{commentId}")]
-    public async Task<IActionResult> DeleteComment(Guid id, Guid figureId)
+    public async Task<IActionResult> DeleteComment(Guid commentId, Guid figureId)
     {
-        var result = await commentService.DeleteComment(id, GetUserId(), GetUserRoles(), figureId);
+        var result = await commentService.DeleteComment(commentId, GetUserId(), GetUserRoles(), figureId);
         
         if(result == "Not found") return NotFound("Comment not found.");
         if(result == "Forbidden") return Forbid("Forbidden.");

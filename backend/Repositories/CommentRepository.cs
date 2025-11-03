@@ -7,6 +7,7 @@ public class CommentRepository(AppDbContext context)
 {
     public async Task<Comment?> GetById(Guid id)
     {
+        Console.WriteLine("[INFO] Comment id: " + id);
         return await context.Comments.FindAsync(id);
     }
 
