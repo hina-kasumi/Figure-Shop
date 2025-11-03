@@ -40,6 +40,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(c => c.UserId);
         
+        modelBuilder.Entity<Figure>(entity =>
+        {
+            entity.Property("ImgSrcJson") 
+                .HasColumnName("ImgSrcJson")
+                .IsRequired()
+                .HasDefaultValue("[]");
+        });
+        
         modelBuilder.Entity<User>()
             .HasMany<ShoppingCart>()
             .WithOne()
