@@ -69,9 +69,8 @@ public class CommentService
         if (comment.FigureId != figureId) return "Not found";
 
         bool isOwner = comment.UserId == userId;
-        bool isAdmin = userRoles.Contains("Admin");
         
-        if(!isOwner && !isAdmin) return "Forbidden";
+        if(!isOwner) return "Forbidden";
 
         comment.Content = request.Content;
         comment.Vote = request.Vote;
