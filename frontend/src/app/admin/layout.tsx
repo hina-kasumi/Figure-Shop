@@ -5,10 +5,12 @@ import Link from "next/link";
 import {
   FaBars,
   FaBox,
+  FaBuilding,
   FaShoppingCart,
   FaUsers,
   FaUserShield,
 } from "react-icons/fa";
+import { MdCategory } from "react-icons/md";
 
 type Props = {
   children: ReactNode;
@@ -18,6 +20,8 @@ const menuItems = [
   { name: "Sản phẩm", icon: <FaBox />, href: "/admin/products" },
   { name: "Đơn hàng", icon: <FaShoppingCart />, href: "/admin/orders" },
   { name: "Người dùng", icon: <FaUsers />, href: "/admin/users" },
+  { name: "Thương hiệu", icon: <FaBuilding />, href: "/admin/branchs" },
+  { name: "Loại Mô hình", icon: <MdCategory />, href: "/admin/categories" },
   { name: "Quản trị viên", icon: <FaUserShield />, href: "/admin/admins" },
 ];
 

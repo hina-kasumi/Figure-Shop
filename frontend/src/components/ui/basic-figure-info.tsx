@@ -43,7 +43,7 @@ export default function BasicFigureInfo({
       <div className="flex gap-4 md:justify-center flex-col md:flex-row h-full overflow-auto no-scrollbar">
         {/* Image */}
         <ImageList
-          images={figure.images}
+          images={figure.imgSrc}
           salePercent={figure.salePercent}
           className=""
         />
@@ -54,9 +54,9 @@ export default function BasicFigureInfo({
           <h1 className="text-2xl font-semibold">{figure.name}</h1>
           <div>
             Thương hiệu:{" "}
-            <span className="text-red-500 font-bold">{figure.branch}</span> |
+            <span className="text-red-500 font-bold">{figure.branch.name}</span> |
             Loại:{" "}
-            <span className="text-red-500 font-bold">{figure.category}</span>
+            <span className="text-red-500 font-bold">{figure.category.name}</span>
           </div>
           <div className="mb-4">
             {figure.quantity > 0 ? (

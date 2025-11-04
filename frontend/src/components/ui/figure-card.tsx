@@ -19,7 +19,7 @@ interface FigureCardProps {
 
 export default function FigureCard({ figure, className }: FigureCardProps) {
   const [preview, setPreview] = useState<boolean>(false);
-  const image = figure.images[0];
+  const image = figure.imgSrc[0];
 
   function handleClick() {
     setPreview(true);

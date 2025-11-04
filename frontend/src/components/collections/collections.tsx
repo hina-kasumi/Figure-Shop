@@ -39,7 +39,7 @@ const figures: FigureCardInformation[] = [
   {
     id: "1",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    images: [
+    imgSrc: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
     ],
     status: "In Stock",
@@ -47,7 +47,7 @@ const figures: FigureCardInformation[] = [
     category: "Figure",
     price: 29.99,
     salePercent: 2,
-    rating: 4.5,
+    vote: 4.5,
     tags: ["anime", "manga"],
     quantity: 10,
     createdAt: "2023-01-01T00:00:00Z",
@@ -56,7 +56,7 @@ const figures: FigureCardInformation[] = [
   {
     id: "2",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    images: [
+    imgSrc: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
     ],
     status: "In Stock",
@@ -64,7 +64,7 @@ const figures: FigureCardInformation[] = [
     category: "Figure",
     price: 29.99,
     salePercent: 0,
-    rating: 4.5,
+    vote: 4.5,
     tags: ["anime", "manga"],
     quantity: 0,
     createdAt: "2023-01-01T00:00:00Z",
@@ -73,7 +73,7 @@ const figures: FigureCardInformation[] = [
   {
     id: "3",
     name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    images: [
+    imgSrc: [
       "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
     ],
     status: "In Stock",
@@ -81,7 +81,7 @@ const figures: FigureCardInformation[] = [
     category: "Figure",
     price: 29.99,
     salePercent: 0,
-    rating: 4.5,
+    vote: 4.5,
     tags: ["anime", "manga"],
     quantity: 10,
     createdAt: "2023-01-01T00:00:00Z",

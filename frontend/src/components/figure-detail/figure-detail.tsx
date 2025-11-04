@@ -43,7 +43,7 @@ const figureDetail: FigureCardInformation = {
   name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
   branch: "Apex Innovation",
   category: "Figure",
-  images: [
+  imgSrc: [
     "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
     "https://product.hstatic.net/200000462939/product/gsc20878_3_7028f60006c8487b88e8885ed61fdc25_grande.jpg",
     "https://product.hstatic.net/200000462939/product/gsc20878_4_960e7d3ed8ff44a2b4533bc8d3b42c5c_grande.jpg",
@@ -58,7 +58,7 @@ const figureDetail: FigureCardInformation = {
   description: `# Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure`,
   price: 29.99,
   salePercent: 2,
-  rating: 4.5,
+  vote: 4.5,
   tags: ["anime", "manga"],
   quantity: 10,
   createdAt: "2023-01-01T00:00:00Z",

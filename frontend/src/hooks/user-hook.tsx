@@ -29,8 +29,6 @@ export function useUsers(): HookTemplate<UserItem[]> {
       });
   }, []);
 
-  console.log(users);
-
   return {
     data: users,
     isLoading: loading,

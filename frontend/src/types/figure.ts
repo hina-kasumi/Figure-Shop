@@ -1,18 +1,53 @@
 export interface FigureCardInformation {
   id: string;
   name: string;
-  images: string[];
-  branch: string;
+  imgSrc: string[];
+  branch: Branch;
   description?: string;
-  category: string;
-  status: string;
+  category: Category;
   price: number;
   salePercent?: number;
-  rating: number;
-  tags: string[];
+  vote: number;
+  tags?: string[];
   quantity: number;
+}
+
+export interface FigureDetailResponse {
+  id: string;
+  name: string;
+  imgSrc: string[];
+  branchId: string;
+  categoryId: string;
+  price: number;
+  salePercent?: number;
+  quantity: number;
+  description: string;
+  vote: number;
+  branch: {
+    id: string;
+    name: string;
+  };
+  category: {
+    id: string;
+    name: string;
+  };
+  comments?: CommentType[];
   createdAt: string;
-  updatedAt: string;
+  createdBy: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
+export interface FigureForm {
+  id?: string;
+  name: string;
+  imgSrc: string[];
+  branchId: string;
+  categoryId: string;
+  price: number;
+  salePercent?: number;
+  quantity: number;
+  description: string;
 }
 
 export interface CommentType {
@@ -32,3 +67,12 @@ export type CartItem = {
   maxQuantity: number;
   quantity: number;
 };
+
+export interface Category {
+  id: string;
+  name: string;
+}
+export interface Branch {
+  id: string;
+  name: string;
+}
