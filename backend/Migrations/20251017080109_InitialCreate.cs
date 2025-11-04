@@ -104,6 +104,7 @@ namespace backend.Migrations
                     BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
+                    ImgSrcJson = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "[]"),
                     SalePercent = table.Column<double>(type: "float", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     SaleFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
