@@ -1,4 +1,4 @@
-import { FigureCardInformation } from "./figure";
+import { FigureDetailResponse } from "./figure";
 
 export interface Order {
   id: string;
@@ -23,5 +23,34 @@ export interface OrderFigure {
   userID: string;
   quantity: number;
   price: number;
-  figure: FigureCardInformation
+  figure: FigureDetailResponse;
+}
+
+export interface OrderResponse {
+  id: string;
+  user: {
+    id: string;
+    email: string;
+  };
+  status: string;
+  totalPrice: number;
+  paidPrice: number;
+  orderDate: string;
+  deliveryDate: string;
+  phoneNumber: string;
+  address: string;
+  orderFigures: {
+    orderId: string;
+    figureId: string;
+    price: number;
+    quantity: number;
+  }[];
+}
+
+export enum OrderStatus {
+  Pending = "Pending",
+  Processing = "Processing",
+  Shipping = "Shipping",
+  Completed = "Completed",
+  Cancelled = "Cancelled"
 }

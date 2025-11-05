@@ -1,17 +1,3 @@
-export interface FigureCardInformation {
-  id: string;
-  name: string;
-  imgSrc: string[];
-  branch: Branch;
-  description?: string;
-  category: Category;
-  price: number;
-  salePercent?: number;
-  vote: number;
-  tags?: string[];
-  quantity: number;
-}
-
 export interface FigureDetailResponse {
   id: string;
   name: string;

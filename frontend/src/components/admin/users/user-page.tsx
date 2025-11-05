@@ -30,7 +30,7 @@ export default function UserPage() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="bg-white max-w-7xl  mx-auto rounded-lg shadow p-6">
       <h1 className="text-xl font-semibold mb-4 text-theme-700">
         Quản lý người dùng
       </h1>
@@ -41,6 +41,8 @@ export default function UserPage() {
             <th className="text-left p-3 border-b">#</th>
             <th className="text-left p-3 border-b">ID</th>
             <th className="text-left p-3 border-b">Email</th>
+            <th className="text-center p-3 border-b">Đã tiêu</th>
+            <th className="p-3 border-b text-center">Đã mua</th>
             <th className="text-center p-3 border-b">Trạng thái</th>
             <th className="text-center p-3 border-b">Quyền</th>
             <th className="text-center p-3 border-b">Hành động</th>
@@ -57,6 +59,12 @@ export default function UserPage() {
               <td className="p-3 border-b">{index + 1}</td>
               <td className="p-3 border-b">{u.id}</td>
               <td className="p-3 border-b">{u.email}</td>
+              <td className="p-3 border-b text-center">
+                {u.totalSpent?.toLocaleString("vi-VN") || 0}đ
+              </td>
+              <td className="p-3 border-b text-center">
+                {u.totalItemsPurchased}
+              </td>
               <td className="p-3 border-b text-center">
                 {isBanned(u) ? (
                   <span className="text-red-600 font-medium">Banned</span>

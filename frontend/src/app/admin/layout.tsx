@@ -1,17 +1,17 @@
 "use client";
 
-import { ReactNode, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ReactNode, useState } from "react";
+import { BiSolidDiscount } from "react-icons/bi";
 import {
   FaBars,
   FaBox,
   FaBuilding,
   FaShoppingCart,
-  FaUsers,
-  FaUserShield,
+  FaUsers
 } from "react-icons/fa";
 import { MdCategory } from "react-icons/md";
-import { BiSolidDiscount } from "react-icons/bi";
 
 type Props = {
   children: ReactNode;
@@ -24,11 +24,11 @@ const menuItems = [
   { name: "Người dùng", icon: <FaUsers />, href: "/admin/users" },
   { name: "Thương hiệu", icon: <FaBuilding />, href: "/admin/branchs" },
   { name: "Loại Mô hình", icon: <MdCategory />, href: "/admin/categories" },
-  { name: "Quản trị viên", icon: <FaUserShield />, href: "/admin/admins" },
 ];
 
 export default function AdminLayout({ children }: Props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const path = usePathname();
 
   return (
     <div className="flex min-h-screen bg-theme-50 text-gray-900">
@@ -53,7 +53,11 @@ export default function AdminLayout({ children }: Props) {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center px-4 py-3 hover:bg-theme-500 transition-all"
+              className={`flex items-center px-4 py-3 hover:bg-theme-500 transition-all ${
+                path.startsWith(item.href)
+                  ? "bg-theme-500 font-semibold"
+                  : "font-medium"
+              }`}
             >
               <span className="text-lg">{item.icon}</span>
               {isSidebarOpen && (

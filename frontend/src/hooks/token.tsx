@@ -14,14 +14,17 @@ interface TokenHook {
 
 export function useToken(): TokenHook {
   const [token, setToken] = useState<string | null>(null);
-  const userID = tokenService.getUserID();
-  const isAdmin = tokenService.isAdmin();
-  const userRole = tokenService.getUserRole();
+  const [userID, setUserID] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string[] | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedToken = tokenService.getToken();
       setToken(storedToken);
+      setUserID(tokenService.getUserID());
+      setIsAdmin(tokenService.isAdmin());
+      setUserRole(tokenService.getUserRole());
     }
   }, []);
 

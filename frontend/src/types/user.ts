@@ -7,6 +7,8 @@ export interface UserItem {
   createdBy: string;
   updatedAt: string;
   updatedBy: string;
+  totalSpent?: number;
+  totalItemsPurchased?: number;
 }
 
 export enum UserRole {
