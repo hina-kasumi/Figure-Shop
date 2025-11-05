@@ -1,102 +1,25 @@
 "use client";
 
-import { FigureCardInformation } from "@/types/figure";
+import { useBranches, useCategories, useFigures } from "@/hooks/figure-hook";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import Box from "../ui/box";
 import FigureCard from "../ui/figure-card";
 import Pagination from "../ui/pagination";
 import TickerBox from "../ui/ticker-box";
 
-const branchs = [
-  {
-    id: "1",
-    name: "Bandai",
-  },
-  {
-    id: "2",
-    name: "Good Smile Company",
-  },
-  {
-    id: "3",
-    name: "Kotobukiya",
-  },
-  {
-    id: "4",
-    name: "Max Factory",
-  },
-  {
-    id: "5",
-    name: "Aniplex",
-  },
-  {
-    id: "6",
-    name: "Alter",
-  },
-];
-
-const figures: FigureCardInformation[] = [
-  {
-    id: "1",
-    name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    imgSrc: [
-      "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
-    ],
-    status: "In Stock",
-    branch: "Apex Innovation",
-    category: "Figure",
-    price: 29.99,
-    salePercent: 2,
-    vote: 4.5,
-    tags: ["anime", "manga"],
-    quantity: 10,
-    createdAt: "2023-01-01T00:00:00Z",
-    updatedAt: "2023-01-02T00:00:00Z",
-  },
-  {
-    id: "2",
-    name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    imgSrc: [
-      "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
-    ],
-    status: "In Stock",
-    branch: "Apex Innovation",
-    category: "Figure",
-    price: 29.99,
-    salePercent: 0,
-    vote: 4.5,
-    tags: ["anime", "manga"],
-    quantity: 0,
-    createdAt: "2023-01-01T00:00:00Z",
-    updatedAt: "2023-01-02T00:00:00Z",
-  },
-  {
-    id: "3",
-    name: "Violet Evergarden 1/7 - Violet Evergarden | Apex Innovation Figure",
-    imgSrc: [
-      "https://cdn.hstatic.net/products/200000462939/i__character_hobby_shop__chocopuni_plushie_tv_anime_the_apothecary_dia_fec592dbbb56413e80f175d9f64f8a59_master.jpg",
-    ],
-    status: "In Stock",
-    branch: "Apex Innovation",
-    category: "Figure",
-    price: 29.99,
-    salePercent: 0,
-    vote: 4.5,
-    tags: ["anime", "manga"],
-    quantity: 10,
-    createdAt: "2023-01-01T00:00:00Z",
-    updatedAt: "2023-01-02T00:00:00Z",
-  },
-];
+interface FilterProps {
+  keyword?: string;
+  sortBy?: "hot_desc" | "price_asc" | "price_desc";
+  minPrice?: number;
+  maxPrice?: number;
+  branchId?: string;
+  categoryId?: string;
+}
 
 const sortList = [
   {
-    sort: "hot",
+    sort: "hot_desc",
     name: "Phổ biến",
-  },
-  {
-    sort: "newest",
-    name: "Mới nhất",
   },
   {
     sort: "price_asc",
@@ -106,57 +29,87 @@ const sortList = [
     sort: "price_desc",
     name: "Giá: Giảm dần",
   },
-  {
-    sort: "a_z",
-    name: "A-Z",
-  },
-  {
-    sort: "z_a",
-    name: "Z-A",
-  },
 ];
 
-export default function CollectionsPage() {
-  const [ticked, setTicked] = useState<string[]>([]);
-  const searchParams = useSearchParams();
+export default function CollectionsPage({
+  keyword,
+  sortBy,
+  minPrice,
+  maxPrice,
+  branchId,
+  categoryId,
+}: FilterProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const page = parseInt(searchParams.get("page") || "1", 10);
+  const searchParams = useSearchParams();
 
-  function handlePageChange(newPage: number) {
+  const { data: figures } = useFigures(
+    keyword,
+    minPrice,
+    maxPrice,
+    branchId,
+    categoryId,
+    sortBy
+  );
+  const { data: branches } = useBranches();
+  const { data: categories } = useCategories();
+
+  function handleChangeQuery(key: string, value: string) {
     // Tạo object mới từ URLSearchParams cũ
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", newPage.toString());    
+    params.set(key, value);
 
     // Điều hướng tới URL mới mà không reload trang
     router.push(`${pathname}?${params.toString()}`);
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = event.target;
-
-    if (checked) {
-      setTicked([...ticked, value]);
-    } else {
-      setTicked(ticked.filter((tick) => tick !== value));
-    }
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div className="md:col-span-1 space-y-4">
-        <TickerBox title="Nhãn" items={branchs} handleChange={handleChange} />
+        <div className="p-4 bg-white rounded-lg shadow-md">
+          <h3 className="font-semibold text-gray-700 mb-3 text-lg">
+            Lọc theo giá
+          </h3>
+
+          <div className="flex justify-between text-sm text-gray-500 mb-1">
+            <span>0₫</span>
+            <span>10.000.000₫</span>
+          </div>
+
+          <input
+            type="range"
+            min="0"
+            max="10000000"
+            step="500000"
+            onChange={(e) => {
+              handleChangeQuery("maxPrice", e.target.value);
+            }}
+            className="w-full accent-theme-400 cursor-pointer"
+          />
+
+          <div className="text-center mt-2">
+            <span className="text-sm text-gray-600">Giá hiện tại:</span>{" "}
+            <span className="font-semibold text-theme-600">
+              {maxPrice?.toLocaleString("vi-VN")}₫
+            </span>
+          </div>
+        </div>
         <TickerBox
           title="Thương hiệu"
-          items={branchs}
-          handleChange={handleChange}
+          curValue={branchId || ""}
+          items={branches}
+          handleChange={(value) =>
+            handleChangeQuery("branchId", value == branchId ? "" : value)
+          }
         />
         <TickerBox
-          title="Lọc giá"
-          items={branchs}
-          handleChange={handleChange}
+          title="Loại"
+          curValue={categoryId || ""}
+          items={categories}
+          handleChange={(value) =>
+            handleChangeQuery("categoryId", value == categoryId ? "" : value)
+          }
         />
-        <TickerBox title="Loại " items={branchs} handleChange={handleChange} />
       </div>
       <Box
         className="md:col-span-3 mx-4"
@@ -166,12 +119,17 @@ export default function CollectionsPage() {
             <div>Sắp xếp:</div>
             <div className="flex items-center justify-start gap-2 w-3xs overflow-x-auto p-1">
               {sortList.map((sortItem) => (
-                <div
+                <button
                   key={sortItem.sort}
-                  className="whitespace-nowrap border px-2 py-1 border-gray-200 rounded w-fit"
+                  className={`whitespace-nowrap border px-2 py-1 border-gray-200 rounded w-fit cursor-pointer text-gray-700 ${
+                    sortBy === sortItem.sort
+                      ? "bg-theme-300"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                  onClick={() => handleChangeQuery("sortBy", sortItem.sort)}
                 >
                   {sortItem.name}
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -185,8 +143,8 @@ export default function CollectionsPage() {
         <Pagination
           className="mt-4"
           totalPages={20}
-          currentPage={page}
-          onPageChange={handlePageChange}
+          currentPage={1}
+          onPageChange={(page) => handleChangeQuery("page", page.toString())}
         />
       </Box>
     </div>

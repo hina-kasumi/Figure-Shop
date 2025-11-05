@@ -2,6 +2,7 @@ import apiClient from "@/libs/http";
 import {
   Branch,
   Category,
+  CommentType,
   FigureDetailResponse,
   FigureForm,
 } from "@/types/figure";
@@ -24,27 +25,21 @@ class FigureService {
   ): Promise<FigureDetailResponse[]> {
     console.log(keyword, minPrice, maxPrice, branchId, categoryId, sortBy);
 
-    if (keyword || minPrice || maxPrice || branchId || categoryId || sortBy) {
-      const params: Record<string, string | number> = {};
-      if (keyword) params.keyword = keyword;
-      if (minPrice !== undefined) params.minPrice = minPrice;
-      if (maxPrice !== undefined) params.maxPrice = maxPrice;
-      if (branchId) params.branchId = branchId;
-      if (categoryId) params.categoryId = categoryId;
-      if (sortBy) params.sortBy = sortBy;
+    const params: Record<string, string | number> = {};
+    if (keyword) params.keyword = keyword;
+    if (minPrice !== undefined) params.minPrice = minPrice;
+    if (maxPrice !== undefined) params.maxPrice = maxPrice;
+    if (branchId) params.branchId = branchId;
+    if (categoryId) params.categoryId = categoryId;
+    if (sortBy) params.sortBy = sortBy;
 
-      const response: AxiosResponse<FigureDetailResponse[]> =
-        await apiClient.get<FigureDetailResponse[]>(`/fig/search`, {
-          params: params,
-        });
+    const response: AxiosResponse<FigureDetailResponse[]> = await apiClient.get<
+      FigureDetailResponse[]
+    >(`/fig/search`, {
+      params: params,
+    });
 
-      return response.data;
-    } else {
-      const response: AxiosResponse<FigureDetailResponse[]> =
-        await apiClient.get<FigureDetailResponse[]>(`/fig`);
-
-      return response.data;
-    }
+    return response.data;
   }
 
   async CreateFigure(data: FigureForm): Promise<FigureDetailResponse> {
@@ -119,6 +114,24 @@ class FigureService {
     const response: AxiosResponse<Branch> = await apiClient.put<Branch>(
       `/branch/${id}`,
       { name }
+    );
+    return response.data;
+  }
+
+  async getComments(figureId: string) {
+    const response: AxiosResponse<CommentType[]> = await apiClient.get(
+      `/fig/${figureId}/comments`
+    );
+    return response.data;
+  }
+
+  async postComment(figureId: string, content: string, vote: number) {
+    const response: AxiosResponse<CommentType> = await apiClient.post(
+      `/fig/${figureId}/comments`,
+      {
+        content,
+        vote,
+      }
     );
     return response.data;
   }

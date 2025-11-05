@@ -1,5 +1,6 @@
-import { FigureCardInformation } from "@/types/figure";
-import Link from "next/link";
+import { useBranches, useCategories } from "@/hooks/figure-hook";
+import { FigureDetailResponse } from "@/types/figure";
+import { nameOfBranch, nameOfCategory } from "@/utils/exact-utils";
 import { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import ImageList from "../figure-detail/images-list";
@@ -8,7 +9,7 @@ import PriceShow from "./price-show";
 
 interface BasicFigureInfoProps {
   className?: string;
-  figure: FigureCardInformation;
+  figure: FigureDetailResponse;
   handleAddFigure: (figureID: string, buyNumber: number) => void;
 }
 
@@ -18,6 +19,8 @@ export default function BasicFigureInfo({
   handleAddFigure,
 }: BasicFigureInfoProps) {
   const [buyNumber, setBuyNumber] = useState(1);
+  const { data: branches } = useBranches();
+  const { data: categories } = useCategories();
 
   function handleIncrease() {
     if (buyNumber < figure.quantity) {
@@ -54,9 +57,13 @@ export default function BasicFigureInfo({
           <h1 className="text-2xl font-semibold">{figure.name}</h1>
           <div>
             Thương hiệu:{" "}
-            <span className="text-red-500 font-bold">{figure.branch.name}</span> |
-            Loại:{" "}
-            <span className="text-red-500 font-bold">{figure.category.name}</span>
+            <span className="text-red-500 font-bold">
+              {nameOfBranch(branches, figure.branchId)}
+            </span>{" "}
+            | Loại:{" "}
+            <span className="text-red-500 font-bold">
+              {nameOfCategory(categories, figure.categoryId)}
+            </span>
           </div>
           <div className="mb-4">
             {figure.quantity > 0 ? (
@@ -90,18 +97,6 @@ export default function BasicFigureInfo({
             >
               <p className="font-semibold">THÊM VÀO GIỎ</p>
             </button>
-          </div>
-          <div className="flex items-center gap-2 mt-2 flex-wrap mb-4">
-            <div>Xem thêm: </div>
-            {figure.tags.map((tag, index) => (
-              <Link
-                href={`/tags/${tag}`}
-                key={index}
-                className="bg-blue-100 rounded-full px-2"
-              >
-                {tag}
-              </Link>
-            ))}
           </div>
         </div>
       </div>

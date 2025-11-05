@@ -1,20 +1,20 @@
 "use client";
 
-import { FigureCardInformation } from "@/types/figure";
+import { FigureDetailResponse } from "@/types/figure";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { IoMdCloseCircle } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
 import BasicFigureInfo from "./basic-figure-info";
 import CircleBtn from "./circle-btn";
 import ColorBox from "./color-box";
 import DiscountTag from "./discount-tag";
 import PriceShow from "./price-show";
-import { IoMdCloseCircle } from "react-icons/io";
 
 interface FigureCardProps {
   className?: string;
-  figure: FigureCardInformation;
+  figure: FigureDetailResponse;
 }
 
 export default function FigureCard({ figure, className }: FigureCardProps) {
@@ -63,8 +63,8 @@ export default function FigureCard({ figure, className }: FigureCardProps) {
           />
         </div>
         <div>
-          <div className="line-clamp-2 my-2">{figure.name}</div>
           <div>
+            <div className="line-clamp-2 my-2">{figure.name}</div>
             {figure.quantity <= 0 ? (
               <ColorBox color="red">Hết hàng</ColorBox>
             ) : (
@@ -82,7 +82,7 @@ export default function FigureCard({ figure, className }: FigureCardProps) {
 }
 
 function FigurePreview(
-  figure: FigureCardInformation,
+  figure: FigureDetailResponse,
   setPreview: (value: boolean) => void
 ) {
   function handleAddFigure(figureID: string, buyNumber: number) {
@@ -99,7 +99,10 @@ function FigurePreview(
       className="fixed z-10 left-0 top-0 p-4 w-[100vw] h-[100vh] bg-black/30 flex justify-center items-center transition-opacity duration-300 ease-in-out"
       onClick={handleClose}
     >
-      <div className="relative w-4xl bg-white" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="relative w-4xl bg-white"
+        onClick={(e) => e.stopPropagation()}
+      >
         <BasicFigureInfo figure={figure} handleAddFigure={handleAddFigure} />
         <CircleBtn
           onClick={handleClose}

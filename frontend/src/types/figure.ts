@@ -51,12 +51,14 @@ export interface FigureForm {
 }
 
 export interface CommentType {
-  userID: string;
-  name: string;
+  id: string;
   vote: number;
   content: string;
   createdAt: string;
-  updatedAt?: string;
+  user: {
+    id: string;
+    email: string;
+  };
 }
 
 export type CartItem = {

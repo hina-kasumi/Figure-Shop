@@ -20,7 +20,7 @@ export default function PriceShow({
   return (
     <div className={`${className} flex justify-between items-center gap-2`}>
       <div className=" text-red-600">
-        {discountedPrice(price, salePercent)}đ
+        {discountedPrice(price, salePercent).toLocaleString("vi-VN")}đ
       </div>
       {originalPrice()}
     </div>

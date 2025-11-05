@@ -2,6 +2,7 @@ import { figureService } from "@/services/figure-service";
 import {
   Branch,
   Category,
+  CommentType,
   FigureDetailResponse,
   FigureForm,
 } from "@/types/figure";
@@ -200,11 +201,6 @@ export function useBranches() {
     setReloadFlag((v) => v + 1);
   }
 
-  function nameOfBranch(id: string): string {
-    const branch = branches.find((b) => b.id === id);
-    return branch ? branch.name : "";
-  }
-
   useEffect(() => {
     setLoading(true);
     figureService
@@ -223,7 +219,6 @@ export function useBranches() {
     data: branches,
     isLoading: loading,
     reload,
-    nameOfBranch,
     error: error,
   };
 }
@@ -239,4 +234,42 @@ export function useBranch() {
     return figureService.updateBranch(id, name);
   }
   return { createBranch, deleteBranch, updateBranch };
+}
+
+export function useComments(figureId: string) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (figureId) {
+      setLoading(true);
+      figureService
+        .getComments(figureId)
+        .then((data: CommentType[]) => {
+          setComments(data);
+        })
+        .catch(() => {
+          setError(new Error("Failed to fetch comments"));
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [figureId]);
+
+  function postComment(content: string, vote: number) {
+    figureService
+      .postComment(figureId, content, vote)
+      .then((newComment: CommentType) => {
+        setComments((prevComments) => [newComment, ...prevComments]);
+      });
+  }
+
+  return {
+    data: comments,
+    postComment,
+    isLoading: loading,
+    error: error,
+  };
 }

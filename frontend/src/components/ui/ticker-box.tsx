@@ -9,7 +9,8 @@ interface TickerBoxProps {
   className?: string;
   height?: string | number;
   items: Item[];
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  curValue: string | number;
+  handleChange: (value: string) => void;
 }
 
 interface Item {
@@ -21,6 +22,7 @@ export default function TickerBox({
   title,
   className = "",
   items,
+  curValue,
   height = 200,
   handleChange,
 }: TickerBoxProps) {
@@ -52,7 +54,14 @@ export default function TickerBox({
               key={item.id}
               className="flex items-center space-x-2 cursor-pointer"
             >
-              <input type="checkbox" value={item.id} onChange={handleChange} />
+              <input
+                type="radio"
+                name={title}
+                checked={curValue == item.id}
+                value={item.id}
+                onClick={() => handleChange(item.id.toString())}
+                onChange={() => {}}
+              />
               <div>{item.name}</div>
             </label>
           ))}

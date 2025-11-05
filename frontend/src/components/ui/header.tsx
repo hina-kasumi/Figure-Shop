@@ -16,7 +16,7 @@ export default function Header() {
   const [items] = useState(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
-  const { token, removeToken } = useToken();
+  const { token, isAdmin, removeToken } = useToken();
 
   return (
     <div className="">
@@ -48,7 +48,18 @@ export default function Header() {
                   >
                     Quản lý tài khoản
                   </Link>
-                  <button onClick={removeToken} className="px-4 py-2 hover:bg-theme-100 cursor-pointer">
+                  {isAdmin && (
+                    <Link
+                      href="/admin/users"
+                      className="px-4 py-2 hover:bg-theme-100"
+                    >
+                      Quản trị viên
+                    </Link>
+                  )}
+                  <button
+                    onClick={removeToken}
+                    className="px-4 py-2 hover:bg-theme-100 cursor-pointer"
+                  >
                     Đăng xuất
                   </button>
                 </div>

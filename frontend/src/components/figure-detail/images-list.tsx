@@ -34,8 +34,8 @@ export default function ImageList({
     <div className={`${className} w-full`}>
       <div className="relative w-full aspect-square mx-auto mb-2">
         <Image
-          src={currImage}
-          alt={currImage}
+          src={currImage || "/no-image.png"}
+          alt="figure-image"
           fill
           objectFit="contain"
           objectPosition="center"
@@ -63,8 +63,8 @@ export default function ImageList({
                 }`}
               >
                 <Image
-                  src={image}
-                  alt={image}
+                  src={image || "/no-image.png"}
+                  alt="figure-image"
                   fill
                   onClick={() => setCurrIndex(index)}
                   objectFit="contain"

@@ -5,14 +5,22 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 
 interface CommentProps extends CommentType {
   className?: string;
+  id: string;
+  vote: number;
+  content: string;
+  createdAt: string;
+  user: {
+    id: string;
+    email: string;
+  };
 }
 
 export default function Comment({
   className,
   content,
-  userID,
+  user: { email, id },
   vote,
-  name,
+  id: commentId,
   createdAt,
 }: CommentProps) {
   const date = new Date(createdAt);
@@ -20,7 +28,7 @@ export default function Comment({
   return (
     <div className={`${className} `}>
       <div className="px-4 py-2 bg-gray-200 rounded-md">
-        <div className="font-bold text-sm">{name}</div>
+        <div className="font-bold text-sm">{email}</div>
         <div>
           {Array.from({ length: 5 }).map((_, index) => {
             const starNumber = index + 1;

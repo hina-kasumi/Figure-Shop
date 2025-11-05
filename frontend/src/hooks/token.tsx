@@ -7,10 +7,16 @@ interface TokenHook {
   token: string | null;
   saveToken: (token: string) => void;
   removeToken: () => void;
+  userID: string | null;
+  isAdmin: boolean;
+  userRole: string[] | null;
 }
 
 export function useToken(): TokenHook {
   const [token, setToken] = useState<string | null>(null);
+  const userID = tokenService.getUserID();
+  const isAdmin = tokenService.isAdmin();
+  const userRole = tokenService.getUserRole();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -35,6 +41,9 @@ export function useToken(): TokenHook {
 
   return {
     token,
+    userID,
+    isAdmin,
+    userRole,
     saveToken,
     removeToken,
   };
