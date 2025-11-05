@@ -48,15 +48,14 @@ public class OrderService
                 Status = o.Status.ToString(),
                 OrderDate = o.CreatedAt,
                 DeliveryDate = o.UpdatedAt,
-                User = user == null
-                    ? null
-                    : new UserSummary
+                User = user == null ? null : new UserSummary
                     {
                         Id = user.Id,
                         Email = user.Email
                     },
                 OrderFigures = o.OrderFigures.Select(of => new OrderFigureSummary
                 {
+                    OrderId = of.OrderId,
                     FigureId = of.FigureId,
                     Quantity = of.Quantity,
                     Price = of.Price
