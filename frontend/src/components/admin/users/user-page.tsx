@@ -39,6 +39,7 @@ export default function UserPage() {
         <thead className="bg-theme-100">
           <tr>
             <th className="text-left p-3 border-b">#</th>
+            <th className="text-left p-3 border-b">ID</th>
             <th className="text-left p-3 border-b">Email</th>
             <th className="text-center p-3 border-b">Trạng thái</th>
             <th className="text-center p-3 border-b">Quyền</th>
@@ -54,6 +55,7 @@ export default function UserPage() {
               }`}
             >
               <td className="p-3 border-b">{index + 1}</td>
+              <td className="p-3 border-b">{u.id}</td>
               <td className="p-3 border-b">{u.email}</td>
               <td className="p-3 border-b text-center">
                 {isBanned(u) ? (

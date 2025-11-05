@@ -11,6 +11,7 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import { MdCategory } from "react-icons/md";
+import { BiSolidDiscount } from "react-icons/bi";
 
 type Props = {
   children: ReactNode;
@@ -18,6 +19,7 @@ type Props = {
 
 const menuItems = [
   { name: "Sản phẩm", icon: <FaBox />, href: "/admin/products" },
+  { name: "Voucher", icon: <BiSolidDiscount />, href: "/admin/vouchers" },
   { name: "Đơn hàng", icon: <FaShoppingCart />, href: "/admin/orders" },
   { name: "Người dùng", icon: <FaUsers />, href: "/admin/users" },
   { name: "Thương hiệu", icon: <FaBuilding />, href: "/admin/branchs" },
@@ -33,7 +35,7 @@ export default function AdminLayout({ children }: Props) {
       {/* Sidebar */}
       <aside
         className={`
-          'bg-theme-600 text-black flex flex-col transition-all duration-300',
+          'bg-theme-600 text-black flex flex-col transition-all duration-300 border-r border-theme-400 ',
           ${isSidebarOpen ? "w-64" : "w-20"}`}
       >
         <div className="flex items-center justify-between px-4 py-4 border-b border-theme-400">
