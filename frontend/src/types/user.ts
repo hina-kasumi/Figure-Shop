@@ -15,3 +15,10 @@ export enum UserRole {
   ADMIN = "Admin",
   USER = "USER",
 }
+
+export enum UserStatus {
+  Active,
+  Inactive,
+  Pending,
+  Banned,
+}
