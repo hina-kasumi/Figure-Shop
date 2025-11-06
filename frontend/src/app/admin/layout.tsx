@@ -1,23 +1,25 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
-import { BiSolidDiscount } from "react-icons/bi";
+import Link from "next/link";
 import {
   FaBars,
   FaBox,
   FaBuilding,
   FaShoppingCart,
-  FaUsers
+  FaUsers,
+  FaUserShield,
 } from "react-icons/fa";
 import { MdCategory } from "react-icons/md";
+import { BiSolidDiscount } from "react-icons/bi";
+import { usePathname } from "next/navigation";
 
 type Props = {
   children: ReactNode;
 };
 
 const menuItems = [
+  { name: "Quản trị viên", icon: <FaUserShield />, href: "/admin/admins" },
   { name: "Sản phẩm", icon: <FaBox />, href: "/admin/products" },
   { name: "Voucher", icon: <BiSolidDiscount />, href: "/admin/vouchers" },
   { name: "Đơn hàng", icon: <FaShoppingCart />, href: "/admin/orders" },

@@ -1,9 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import CollectionsPage from "@/components/collections/collections";
 import { useSearchParams } from "next/navigation";
 
-export default function Collections() {
+function CollectionsContent() {
   const searchParams = useSearchParams();
   const keyword = searchParams.get("keyword") || "";
   const sortBy =
@@ -30,5 +31,13 @@ export default function Collections() {
       branchId={branchId}
       categoryId={categoryId}
     />
+  );
+}
+
+export default function Collections() {
+  return (
+    <Suspense fallback={<div>Đang tải danh sách bộ sưu tập...</div>}>
+      <CollectionsContent />
+    </Suspense>
   );
 }
