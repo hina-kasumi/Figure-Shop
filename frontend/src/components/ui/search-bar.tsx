@@ -1,15 +1,25 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 export default function SearchBar() {
   const [query, setQuery] = useState<string>("");
+  const router = useRouter();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setQuery(e.target.value);
   }
 
   function handleSearch() {
-    console.log("Searching for:", query);
+    if (query.trim() !== "") {
+      router.push(`/collections?keyword=${encodeURIComponent(query)}`);
+    }
+  }
+
+  function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   }
 
   return (
@@ -20,6 +30,7 @@ export default function SearchBar() {
         placeholder="Bạn đang tìm gì..."
         value={query}
         onChange={(e) => handleChange(e)}
+        onKeyDown={(e) => handleKeyPress(e)}
       />
       <button
         className="bg-theme-400 text-background py-1 px-5 rounded cursor-pointer"
