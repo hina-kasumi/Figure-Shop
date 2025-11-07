@@ -24,7 +24,7 @@ public class AuthService
         var user = await _userService.GetUserByEmail(email) ?? throw new Exception("User not found");
         if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             throw new Exception("Wrong password");
-
+        
         return GenToken(user);
     }
 
@@ -45,8 +45,8 @@ public class AuthService
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Email),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Sub, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -9,4 +9,7 @@ public class OrderFigure : BaseEntity
     public Guid FigureId { get; set; }
     public int Quantity { get; set; }
     public double Price { get; set; }
+    
+    public Figure? Figure { get; set; }
+    public Order? Order { get; set; }
 }

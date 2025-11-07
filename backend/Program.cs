@@ -1,7 +1,5 @@
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using backend.Dtos;
 using backend.Interceptor;
 using backend.Repositories;
 using backend.Services;
@@ -39,11 +37,18 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<BranchRepository>();
 builder.Services.AddScoped<BranchService>();
 builder.Services.AddScoped<OrderRepository>();
-builder.Services.AddScoped<OrderService>();
+// builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<VoucherRepository>();
 builder.Services.AddScoped<VoucherService>();
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<CommentService>();
+
+builder.Services.AddScoped<CartRepository>();
+builder.Services.AddScoped<CartService>();
+
+builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<OrderService>();
+
 
 // builder.Services.AddControllers(options =>
 // {
@@ -71,6 +76,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
 
 async Task SeedDatabaseAsync(IHost host)
 {
@@ -109,6 +115,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
