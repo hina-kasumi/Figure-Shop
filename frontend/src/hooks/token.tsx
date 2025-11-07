@@ -3,20 +3,13 @@
 import { tokenService } from "@/services/token";
 import { useEffect, useState } from "react";
 
-interface TokenHook {
-  token: string | null;
-  saveToken: (token: string) => void;
-  removeToken: () => void;
-  userID: string | null;
-  isAdmin: boolean;
-  userRole: string[] | null;
-}
 
-export function useToken(): TokenHook {
+export function useToken() {
   const [token, setToken] = useState<string | null>(null);
   const [userID, setUserID] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string[] | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -25,6 +18,7 @@ export function useToken(): TokenHook {
       setUserID(tokenService.getUserID());
       setIsAdmin(tokenService.isAdmin());
       setUserRole(tokenService.getUserRole());
+      setEmail(tokenService.getUserEmail());
     }
   }, []);
 
@@ -47,6 +41,7 @@ export function useToken(): TokenHook {
     userID,
     isAdmin,
     userRole,
+    email,
     saveToken,
     removeToken,
   };

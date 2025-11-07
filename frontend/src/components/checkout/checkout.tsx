@@ -1,8 +1,13 @@
 "use client";
 
-import { CartItem } from "@/types/figure";
+import { useCart } from "@/hooks/cart-hook";
+import { useFigures } from "@/hooks/figure-hook";
+import { useAddNewOrder } from "@/hooks/order-hook";
+import { useVouchers } from "@/hooks/voucher-hook";
+import { CartItem } from "@/types/cart";
 import { Voucher } from "@/types/voucher";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   FaBoxOpen,
@@ -12,108 +17,26 @@ import {
   FaTag,
 } from "react-icons/fa";
 
-// 🛍️ Fake list sản phẩm trong giỏ
-const cart: CartItem[] = [
-  {
-    figureId: "F001",
-    name: "Luffy Gear 5",
-    image:
-      "https://product.hstatic.net/200000462939/product/gsc20878_3_7028f60006c8487b88e8885ed61fdc25_grande.jpg",
-
-    price: 350000,
-    quantity: 1,
-    maxQuantity: 5,
-  },
-  {
-    figureId: "F002",
-    name: "Zoro Santoryu",
-    image:
-      "https://product.hstatic.net/200000462939/product/gsc20878_3_7028f60006c8487b88e8885ed61fdc25_grande.jpg",
-
-    price: 400000,
-    quantity: 2,
-    maxQuantity: 3,
-  },
-];
-
-const vouchers: Voucher[] = [
-  {
-    id: "SALE10",
-    description:
-      "Giảm 10% cho đơn hàng từ 300K, áp dụng toàn bộ sản phẩm trong danh mục thời trang.",
-    maxPriceCanDiscount: 100000,
-    quantity: 12,
-    isActive: true,
-    salePercent: 10,
-    figuresAvalable: ["F001", "F002"],
-    createdAt: "",
-    createdBy: "",
-    updatedAt: "",
-    updatedBy: "",
-    usedFrom: "2025-10-01T00:00:00Z",
-    usedTo: "2025-11-01T00:00:00Z",
-  },
-  {
-    id: "FREESHIP",
-    description: "Miễn phí vận chuyển toàn quốc cho đơn trên 200K.",
-    maxPriceCanDiscount: 0,
-    quantity: 25,
-    isActive: true,
-    salePercent: 0,
-    figuresAvalable: ["F002"],
-    createdAt: "",
-    createdBy: "",
-    updatedAt: "",
-    updatedBy: "",
-  },
-  {
-    id: "FREESHIP0",
-    description: "Miễn phí vận chuyển toàn quốc cho đơn trên 200K.",
-    maxPriceCanDiscount: 0,
-    quantity: 25,
-    isActive: true,
-    salePercent: 0,
-    figuresAvalable: ["F002"],
-    createdAt: "",
-    createdBy: "",
-    updatedAt: "",
-    updatedBy: "",
-  },
-
-  {
-    id: "FREESHIP1",
-    description: "Miễn phí vận chuyển toàn quốc cho đơn trên 200K.",
-    maxPriceCanDiscount: 0,
-    quantity: 25,
-    isActive: true,
-    salePercent: 0,
-    figuresAvalable: ["F002"],
-    createdAt: "",
-    createdBy: "",
-    updatedAt: "",
-    updatedBy: "",
-  },
-  {
-    id: "FREESHIP2",
-    description: "Miễn phí vận chuyển toàn quốc cho đơn trên 200K.",
-    maxPriceCanDiscount: 0,
-    quantity: 25,
-    isActive: true,
-    salePercent: 0,
-    figuresAvalable: ["F002"],
-    createdAt: "",
-    createdBy: "",
-    updatedAt: "",
-    updatedBy: "",
-  },
-];
-
 export default function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+  const { cart } = useCart();
+  const { data: figures } = useFigures();
+  const { data: vouchers } = useVouchers();
+  const { addNewOrder, loading } = useAddNewOrder();
+  const route = useRouter();
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartItems: CartItem[] = cart.items || [];
+  const figuresInCartMap = new Map(
+    (
+      figures?.filter((figure) =>
+        cartItems.some((item) => item.productId === figure.id)
+      ) || []
+    ).map((figure) => [figure.id, figure])
+  );
+
+  const total = cart.totalPrice;
   const discountedTotal = selectedVoucher
     ? Math.max(
         total - (total * selectedVoucher.salePercent) / 100,
@@ -123,9 +46,19 @@ export default function CheckoutPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(
-      `Đặt hàng thành công!\nVoucher: ${selectedVoucher?.id || "Không dùng"}`
-    );
+    addNewOrder(
+      cartItems.map((item) => item.productId),
+      address,
+      phone,
+      selectedVoucher ? selectedVoucher.id : null
+    )
+      .then(() => {
+        alert("Đặt hàng thành công!");
+        route.push("/profile");
+      })
+      .catch((err) => {
+        alert("Đặt hàng thất bại: " + err.message);
+      });
   };
 
   const handleSelectVoucher = (v: Voucher) => {
@@ -146,16 +79,19 @@ export default function CheckoutPage() {
           </h2>
 
           <div className="divide-y divide-gray-200 border border-theme-100 rounded-md">
-            {cart.map((item) => (
+            {cartItems.map((item) => (
               <div
-                key={item.figureId}
+                key={item.productId}
                 className="flex items-center justify-between p-3 hover:bg-theme-50 transition"
               >
                 <div className="flex items-center gap-3">
                   <Image
                     height={64}
                     width={64}
-                    src={item.image}
+                    src={
+                      figuresInCartMap.get(item.productId)?.imgSrc[0] ||
+                      "no-image.png"
+                    }
                     alt={item.name}
                     className="rounded object-cover border border-gray-200"
                   />
@@ -168,10 +104,10 @@ export default function CheckoutPage() {
                 </div>
                 <div className="text-right">
                   <p className="font-semibold text-theme-700">
-                    {(item.price * item.quantity).toLocaleString()}₫
+                    {item.lineTotal.toLocaleString()}₫
                   </p>
                   <p className="text-xs text-gray-500">
-                    {item.price.toLocaleString()}₫ / cái
+                    {item.unitPrice.toLocaleString()}₫ / cái
                   </p>
                 </div>
               </div>
@@ -305,6 +241,7 @@ export default function CheckoutPage() {
           {/* Thanh toán */}
           <div className="pt-4 border-t border-gray-200">
             <button
+              disabled={loading}
               type="submit"
               className="w-full flex justify-center items-center gap-2 py-3 bg-theme-600 hover:bg-theme-700 text-white font-semibold rounded-md transition-all"
             >

@@ -1,3 +1,4 @@
+import { useCart } from "@/hooks/cart-hook";
 import { useBranches, useCategories } from "@/hooks/figure-hook";
 import { FigureDetailResponse } from "@/types/figure";
 import { nameOfBranch, nameOfCategory } from "@/utils/exact-utils";
@@ -21,6 +22,7 @@ export default function BasicFigureInfo({
   const [buyNumber, setBuyNumber] = useState(1);
   const { data: branches } = useBranches();
   const { data: categories } = useCategories();
+  const { addCartItem } = useCart();
 
   function handleIncrease() {
     if (buyNumber < figure.quantity) {
@@ -36,6 +38,13 @@ export default function BasicFigureInfo({
   function handleClickAddFigure(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     e.stopPropagation();
+    addCartItem(figure.id, buyNumber)
+      .then(() => {
+        alert("Đã thêm vào giỏ hàng!");
+      })
+      .catch((err) => {
+        alert("Lỗi khi thêm vào giỏ hàng: " + (err.message || err));
+      });
     handleAddFigure(figure.id, buyNumber);
   }
 

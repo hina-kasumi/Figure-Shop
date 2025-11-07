@@ -1,9 +1,9 @@
-import { Order } from "@/types/order";
+import { OrderOfUserDetailResponse } from "@/types/order";
 import { FaTicketAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
 interface OrderDetailModalProps {
-  order: Order;
+  order: OrderOfUserDetailResponse | null;
   onClose: () => void;
 }
 
@@ -12,8 +12,10 @@ export default function OrderDetailModal({
   order,
   onClose,
 }: OrderDetailModalProps) {
-  const voucher = order.voucherID ? order.voucherID : null;
-  const figures = order.figures || [];
+  const voucher = null;
+  const figures = order?.orderFigures || [];
+
+  if (!order) return <></>;
 
   return (
     <div className="fixed inset-0 bg-black/50 bg-opacity-40 flex justify-center items-center z-50">
@@ -37,10 +39,10 @@ export default function OrderDetailModal({
             <strong>Địa chỉ:</strong> {order.address}
           </p>
           <p className="text-sm text-gray-600">
-            <strong>Ngày tạo:</strong> {order.createdAt}
+            <strong>Ngày tạo:</strong> {order.orderDate}
           </p>
           <p className="text-sm text-gray-600">
-            <strong>Giá tiền:</strong> {order.priceDiscounted.toLocaleString()}đ
+            <strong>Giá tiền:</strong> {order.totalPrice.toLocaleString("vi-VN")}đ
           </p>
         </div>
 
@@ -51,10 +53,10 @@ export default function OrderDetailModal({
           ) : (
             figures.map((item) => (
               <div
-                key={item.id}
+                key={item.figureId}
                 className="border border-gray-200 rounded p-2 text-sm flex justify-between"
               >
-                <span>{item.figure?.name || "Sản phẩm không tồn tại"}</span>
+                <span>{item.name || "Sản phẩm không tồn tại"}</span>
                 <span>x{item.quantity}</span>
               </div>
             ))

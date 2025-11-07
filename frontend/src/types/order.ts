@@ -47,10 +47,58 @@ export interface OrderResponse {
   }[];
 }
 
+export interface NewOrderRequest {
+  cartItemIds: string[];
+  address: string;
+  phoneNumber: string;
+  voucherId?: string | null;
+  paymentMethod: string;
+}
+
+export interface OrderOfUserDetailResponse {
+  id: string;
+  status: number;
+  subtotal: number;
+  discountAmount: number;
+  totalPrice: number;
+  paidPrice: number;
+  orderDate: string;
+  phoneNumber: string;
+  address: string;
+  totalItemCount: number;
+  orderFigures: {
+    orderId: string;
+    figureId: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+}
+
+export interface OrderOfUserItem {
+  id: string;
+  status: number;
+  subtotal: number;
+  discountAmount?: number;
+  totalPrice: number;
+  paidPrice: number;
+  orderDate: string;
+  phoneNumber?: string;
+  address?: string;
+  totalItemCount: number;
+  orderFigures: {
+    orderId: string;
+    figureId: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+}
+
 export enum OrderStatus {
   Pending = "Pending",
   Processing = "Processing",
   Shipping = "Shipping",
   Completed = "Completed",
-  Cancelled = "Cancelled"
+  Cancelled = "Cancelled",
 }

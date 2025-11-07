@@ -53,6 +53,14 @@ class TokenService {
     }
     return roles.includes("Admin");
   }
+
+  getUserEmail(): string | null {
+    const claims = this.getClaims();
+    if (!claims) {
+      return null;
+    }
+    return claims["email"] || null;
+  }
 }
 
 export const tokenService = new TokenService();

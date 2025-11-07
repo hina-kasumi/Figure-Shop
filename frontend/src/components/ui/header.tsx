@@ -13,7 +13,6 @@ import { useToken } from "@/hooks/token";
 import { CgProfile } from "react-icons/cg";
 
 export default function Header() {
-  const [items] = useState(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const { token, isAdmin, removeToken } = useToken();
@@ -86,9 +85,6 @@ export default function Header() {
           >
             <div className="relative">
               <HiOutlineShoppingCart size={30} />
-              <div className="absolute flex items-center justify-center right-0 top-0 h-4 w-4 bg-red-600 p-1 text-xs rounded-full">
-                {items}
-              </div>
             </div>
             <div className="hidden lg:block text-xl">Giỏ hàng</div>
             <div onClick={(e) => e.stopPropagation()}>

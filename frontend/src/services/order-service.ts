@@ -1,5 +1,5 @@
 import apiClient from "@/libs/http";
-import { OrderResponse, OrderStatus } from "@/types/order";
+import { OrderOfUserDetailResponse, OrderOfUserItem, OrderResponse, OrderStatus } from "@/types/order";
 import { AxiosResponse } from "axios";
 
 class OrderService {
@@ -29,28 +29,57 @@ class OrderService {
   ): Promise<void> {
     let status: number;
     switch (newStatus) {
-        case OrderStatus.Pending:
-            status = 0;
-            break;
-        case OrderStatus.Processing:
-            status = 1;
-            break;
-        case OrderStatus.Shipping:
-            status = 2;
-            break;
-        case OrderStatus.Completed:
-            status = 3;
-            break;
-        case OrderStatus.Cancelled:
-            status = 4;
-            break;
-        default:
-            throw new Error("Invalid order status");
+      case OrderStatus.Pending:
+        status = 0;
+        break;
+      case OrderStatus.Processing:
+        status = 1;
+        break;
+      case OrderStatus.Shipping:
+        status = 2;
+        break;
+      case OrderStatus.Completed:
+        status = 3;
+        break;
+      case OrderStatus.Cancelled:
+        status = 4;
+        break;
+      default:
+        throw new Error("Invalid order status");
     }
-    
+
     await apiClient.patch(`/admin/orders/${orderId}/status`, {
       newStatus: status,
     });
+  }
+
+  async addNewOrder(
+    cartItemIds: string[],
+    address: string,
+    phoneNumber: string,
+    voucherId?: string | null
+  ): Promise<void> {
+    await apiClient.post("/api/orders", {
+      cartItemIds,
+      address,
+      phoneNumber,
+      voucherId,
+      paymentMethod: "COD",
+    });
+  }
+
+  async getOrdersOfUser() {
+    const response: AxiosResponse<OrderOfUserItem[]> = await apiClient.get<
+      OrderOfUserItem[]
+    >("/api/orders");
+    return response.data;
+  }
+
+  async getOrderDetails(orderId: string) {
+    const response: AxiosResponse<OrderOfUserDetailResponse> = await apiClient.get<
+      OrderOfUserDetailResponse
+    >(`/api/orders/${orderId}`);
+    return response.data;
   }
 }
 
