@@ -319,7 +319,7 @@ public class OrderService
                   Address = o.Address,
                   Status = o.Status,
                   OrderDate = o.CreatedAt,
-                  DeliveryDate = o.UpdatedAt,
+                  UpdatedAt = o.UpdatedAt,
                   User = new UserSummary
                       {
                           Id = user.Id,
@@ -347,6 +347,7 @@ public class OrderService
           }
           
           order.Status = newStatus;
+          order.UpdatedAt = DateTime.UtcNow;
           await _orderRepository.SaveChangesAsync();
           return true;
       }

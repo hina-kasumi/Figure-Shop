@@ -13,4 +13,7 @@ public class FigureRequest
     
     public BranchRequest? Branch { get; set; }
     public CategoryRequest? Category { get; set; }
+    
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }
