@@ -46,6 +46,14 @@ public class FigureRepository
     {
         _context.Entry(entity).State = EntityState.Modified;
     }
+    
+    public async Task<Figure> UpdateAsync(Figure figure)
+    {
+        _context.Figures.Update(figure);
+        await _context.SaveChangesAsync();
+        return figure;
+    }
+
 
     public void Remove(Figure entity)
     {

@@ -85,7 +85,7 @@ public class AdminController : ControllerBase
     {
         var success = await _orderService.UpdateOrderStatus(id, request.NewStatus);
         if (!success) return NotFound("Order not found.");
-        return NoContent();   
+        return NoContent();
     }
 
     [HttpGet("users/report")]

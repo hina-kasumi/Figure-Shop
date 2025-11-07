@@ -108,7 +108,27 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(o => o.VoucherId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+        modelBuilder.Entity<ShoppingCart>(entity =>
+        {
+            entity.HasKey(sc => new { sc.UserId, sc.FigureId });
+
+            // 2. Cấu hình rõ ràng mối quan hệ với Figure
+            // (Để EF biết dùng FigureId chứ không phải FigureId1)
+            entity.HasOne(sc => sc.Figure)
+                .WithMany() // Giả sử Figure không cần list ShoppingCart
+                .HasForeignKey(sc => sc.FigureId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<OrderFigure>(entity =>
+        {
+            entity.HasOne(of => of.Order)
+                .WithMany(o => o.OrderFigures) // Tham chiếu tới ICollection trong Order
+                .HasForeignKey(of => of.OrderId);
+
+            entity.HasOne(of => of.Figure)
+                .WithMany() // Figure không cần biết nó ở Order nào
+                .HasForeignKey(of => of.FigureId);
+        });
         base.OnModelCreating(modelBuilder);
     }
 }

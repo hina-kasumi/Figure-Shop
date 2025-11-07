@@ -25,6 +25,12 @@ public class VoucherRepository (AppDbContext context)
         context.Vouchers.Update(entity);
     }
     
+    public async Task<Voucher> UpdateAsync(Voucher entity)
+    {
+        context.Vouchers.Update(entity);
+        await context.SaveChangesAsync();
+        return entity;
+    }    
     public void Remove(Voucher entity)
     {
         context.Vouchers.Remove(entity);
