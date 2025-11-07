@@ -198,6 +198,14 @@ public class OrderService
             OrderDate = order.CreatedAt,
             TotalPrice = order.PaidPrice, // Hiển thị giá đã trả
             TotalItemCount = order.OrderFigures.Sum(of => of.Quantity),
+            OrderFigures = order.OrderFigures.Select(of => new OrderFigureSummary
+            {
+                OrderId = of.OrderId,
+                FigureId = of.FigureId,
+                Name = of.Figure?.Name ?? "N/A",
+                Quantity = of.Quantity,
+                Price = of.Price
+            }).ToList()
         });
     }
 
