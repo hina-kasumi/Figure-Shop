@@ -61,6 +61,7 @@ public class VoucherService (VoucherRepository voucherRepository)
         existingVoucher.SalePercent = request.SalePercent ?? existingVoucher.SalePercent;
         existingVoucher.UsedFrom = (request.UsedFrom ?? existingVoucher.UsedFrom).ToUniversalTime();
         existingVoucher.UsedTo = (request.UsedTo ?? existingVoucher.UsedTo).ToUniversalTime();
+        existingVoucher.UpdatedAt = DateTime.UtcNow;
         
         voucherRepository.Update(existingVoucher);
         await voucherRepository.SaveChangesAsync();

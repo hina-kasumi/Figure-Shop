@@ -40,7 +40,9 @@ public class FigureService
                 {
                     Id = f.Category.Id,
                     Name = f.Category.Name
-                }
+                },
+            CreatedAt = f.CreatedAt,
+            UpdatedAt = f.UpdatedAt
         });
 
         return figureRequest;
@@ -66,7 +68,8 @@ public class FigureService
             SaleFrom = dto.SaleFrom,
             SaleTo = dto.SaleTo,
             Description = dto.Description,
-            Vote = 0
+            Vote = 0,
+            CreatedAt = DateTime.UtcNow
         };
 
         await _figureRepository.AddAsync(newFigure);
@@ -93,6 +96,7 @@ public class FigureService
         existingFigure.SaleFrom = dto.SaleFrom;
         existingFigure.SaleTo = dto.SaleTo;
         existingFigure.Description = dto.Description ?? existingFigure.Description;
+        existingFigure.UpdatedAt = DateTime.UtcNow;
 
         _figureRepository.Update(existingFigure);
         await _figureRepository.SaveChangesAsync();
