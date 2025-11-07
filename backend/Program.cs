@@ -99,6 +99,8 @@ async Task SeedDatabaseAsync(IHost host)
         {
             // Lấy DbContext
             var context = services.GetRequiredService<AppDbContext>();
+            
+            await context.Database.MigrateAsync();
             // Gọi Seeder
             await DataSeeder.SeedAsync(services);
         }
@@ -112,7 +114,8 @@ async Task SeedDatabaseAsync(IHost host)
 
 await SeedDatabaseAsync(app);
 
-// Bắt lỗi toàn cục (đặt ở đầu)
+app.UseStaticFiles();
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseSwagger();

@@ -13,7 +13,7 @@ public class CreateFigureRequest
 
     [Range(0, double.MaxValue)] public double Price { get; set; } = 0;
     
-    public ICollection<string> ImgSrc { get; set; } = [];
+    public ICollection<IFormFile> Images { get; set; } = [];
 
     [Range(0, 100)] public double SalePercent { get; set; } = 0;
     

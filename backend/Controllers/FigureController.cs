@@ -36,10 +36,17 @@ public class FigureController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateFigure([FromBody] CreateFigureRequest dto)
+    public async Task<IActionResult> CreateFigure([FromForm] CreateFigureRequest dto)
     {
-        var newFigure = await _figureService.CreateFigureAsync(dto);
-        return CreatedAtAction(nameof(GetFigureById), new { id = newFigure.Id }, newFigure);
+        try
+        {
+            var newFigure = await _figureService.CreateFigureAsync(dto);
+            return Ok(newFigure);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     [HttpPut("{id}")]

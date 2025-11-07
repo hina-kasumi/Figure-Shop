@@ -7,10 +7,12 @@ namespace backend.Services;
 public class FigureService
 {
     private readonly FigureRepository _figureRepository;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public FigureService(FigureRepository figureRepository)
+    public FigureService(FigureRepository figureRepository,  IWebHostEnvironment webHostEnvironment)
     {
         _figureRepository = figureRepository;
+        _webHostEnvironment = webHostEnvironment;
     }
     
     public async Task<IEnumerable<FigureRequest>> GetAllFiguresAsync()
@@ -55,6 +57,29 @@ public class FigureService
     
     public async Task<Figure> CreateFigureAsync(CreateFigureRequest dto)
     {
+        var imageUrls = new List<string>();
+        if (dto.Images != null && dto.Images.Any())
+        {
+            string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "figures");
+            Directory.CreateDirectory(uploadFolder);
+            
+            foreach (var imageFile in dto.Images)
+            {
+                if (imageFile.Length > 0)
+                {
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(fileStream);
+                    }
+
+                    imageUrls.Add($"/uploads/figures/{uniqueFileName}");
+                }
+            }
+        }
+        
         var newFigure = new Figure
         {
             Id = Guid.NewGuid(),
@@ -62,7 +87,7 @@ public class FigureService
             BranchId = dto.BranchId,
             CategoryId = dto.CategoryId,
             Price = dto.Price,
-            ImgSrc = dto.ImgSrc,
+            ImgSrc = imageUrls,
             SalePercent = dto.SalePercent,
             Quantity = dto.Quantity,
             SaleFrom = dto.SaleFrom,
