@@ -1,13 +1,13 @@
+import MyImage from "@/components/ui/MyImage";
 import {
   useCategories,
   useDeleteFigure,
   useFigures,
 } from "@/hooks/figure-hook";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FaEdit, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { FaEdit, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
 
 export default function ProductListPage() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function ProductListPage() {
   const categoryId = searchParams.get("categoryId") || undefined;
 
   // Fetch data
-  const { data: products, isLoading } = useFigures(
+  const { data: products, isLoading, reload } = useFigures(
     keyword,
     minPrice,
     maxPrice,
@@ -162,7 +162,7 @@ export default function ProductListPage() {
               products.map((p) => (
                 <tr key={p.id} className="hover:bg-theme-50 transition">
                   <td className="p-3 border-b text-center">
-                    <Image
+                    <MyImage
                       src={p?.imgSrc[0] || "/placeholder.png"}
                       alt={p.name}
                       width={48}
@@ -198,7 +198,7 @@ export default function ProductListPage() {
                         ) {
                           deleteFigure(p.id).then(() => {
                             alert("Đã xóa sản phẩm!");
-                            router.refresh();
+                            reload();
                           });
                         }
                       }}

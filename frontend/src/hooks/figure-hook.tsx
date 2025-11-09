@@ -3,6 +3,7 @@ import {
   Branch,
   Category,
   CommentType,
+  CreateFigureForm,
   FigureDetailResponse,
   FigureForm,
 } from "@/types/figure";
@@ -61,6 +62,11 @@ export function useFigures(
   const [loading, setLoading] = useState<boolean>(false);
   const [figures, setFigures] = useState<FigureDetailResponse[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const [realoadFlag, setReloadFlag] = useState<number>(0);
+
+  function reload() {
+    setReloadFlag((v) => v + 1);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -68,7 +74,6 @@ export function useFigures(
       .getAllFigures(keyword, minPrice, maxPrice, branchId, categoryId, sortBy)
       .then((data: FigureDetailResponse[]) => {
         setFigures(data);
-        console.log(data);
       })
       .catch(() => {
         setError(new Error("Failed to fetch figures"));
@@ -76,22 +81,22 @@ export function useFigures(
       .finally(() => {
         setLoading(false);
       });
-  }, [keyword, minPrice, maxPrice, branchId, categoryId, sortBy]);
+  }, [keyword, minPrice, maxPrice, branchId, categoryId, sortBy, realoadFlag]);
 
   return {
     data: figures,
     isLoading: loading,
     error: error,
+    reload,
   };
 }
 
 export function useCreateFigure() {
   const [loading, setLoading] = useState<boolean>(false);
-  const createFigure = async (data: FigureForm) => {
+  const createFigure = async (data: CreateFigureForm) => {
     try {
       setLoading(true);
-      const response = await figureService.CreateFigure(data);
-      return response;
+      await figureService.createFigure(data);
     } catch (error) {
       console.error("Failed to create figure:", error);
       throw error;
@@ -150,7 +155,6 @@ export function useCategories() {
 
   function nameOfCategory(id: string): string {
     const category = categories.find((c) => c.id == id);
-    console.log(categories, id, category);
 
     return category ? category.name : "";
   }

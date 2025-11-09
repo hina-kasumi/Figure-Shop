@@ -6,7 +6,6 @@ import { useAddNewOrder } from "@/hooks/order-hook";
 import { useVouchers } from "@/hooks/voucher-hook";
 import { CartItem } from "@/types/cart";
 import { Voucher } from "@/types/voucher";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -16,6 +15,7 @@ import {
   FaPhoneAlt,
   FaTag,
 } from "react-icons/fa";
+import MyImage from "../ui/MyImage";
 
 export default function CheckoutPage() {
   const [address, setAddress] = useState("");
@@ -85,7 +85,7 @@ export default function CheckoutPage() {
                 className="flex items-center justify-between p-3 hover:bg-theme-50 transition"
               >
                 <div className="flex items-center gap-3">
-                  <Image
+                  <MyImage
                     height={64}
                     width={64}
                     src={

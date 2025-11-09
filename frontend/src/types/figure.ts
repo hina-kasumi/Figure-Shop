@@ -36,6 +36,17 @@ export interface FigureForm {
   description: string;
 }
 
+export interface CreateFigureForm {
+  name: string;
+  images: FileList | null;
+  branchId: string;
+  categoryId: string;
+  price: number;
+  salePercent?: number;
+  quantity: number;
+  description: string;
+}
+
 export interface CommentType {
   id: string;
   vote: number;
@@ -46,15 +57,6 @@ export interface CommentType {
     email: string;
   };
 }
-
-export type CartItem = {
-  figureId: string;
-  name: string;
-  image: string;
-  price: number;
-  maxQuantity: number;
-  quantity: number;
-};
 
 export interface Category {
   id: string;

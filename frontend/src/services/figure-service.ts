@@ -3,10 +3,12 @@ import {
   Branch,
   Category,
   CommentType,
+  CreateFigureForm,
   FigureDetailResponse,
   FigureForm,
 } from "@/types/figure";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
+import { tokenService } from "./token";
 
 class FigureService {
   async getFigureById(id: string): Promise<FigureDetailResponse> {
@@ -23,7 +25,6 @@ class FigureService {
     categoryId?: string,
     sortBy?: "hot_desc" | "price_asc" | "price_desc"
   ): Promise<FigureDetailResponse[]> {
-    console.log(keyword, minPrice, maxPrice, branchId, categoryId, sortBy);
 
     const params: Record<string, string | number> = {};
     if (keyword) params.keyword = keyword;
@@ -42,11 +43,45 @@ class FigureService {
     return response.data;
   }
 
-  async CreateFigure(data: FigureForm): Promise<FigureDetailResponse> {
-    const response: AxiosResponse<FigureDetailResponse> =
-      await apiClient.post<FigureDetailResponse>(`/fig`, data);
+  async createFigure(data: CreateFigureForm): Promise<void> {
+    const formData = new FormData();
 
-    return response.data;
+    // Append các field cơ bản
+    formData.append("Name", data.name);
+    formData.append("BranchId", data.branchId);
+    formData.append("CategoryId", data.categoryId);
+    formData.append("Price", data.price.toString());
+    formData.append("Quantity", data.quantity.toString());
+    formData.append("Description", data.description);
+
+    if (data.salePercent !== undefined)
+      formData.append("SalePercent", data.salePercent.toString());
+
+    // Append các file
+    if (data.images) {
+      Array.from(data.images).forEach((file) => {
+        formData.append("Images", file);
+      });
+    }
+
+    // Debug: In ra nội dung FormData trước khi gửi
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+    // Gửi request
+    const response = await axios.post(
+      "http://localhost:8080/fig", // URL backend thực tế
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${tokenService.getToken()}`,
+        },
+      }
+    );
+
+    console.log(response);
+    
   }
 
   async UpdateFigure(data: FigureForm): Promise<FigureDetailResponse> {
@@ -94,7 +129,6 @@ class FigureService {
     const response: AxiosResponse<Branch[]> = await apiClient.get<Branch[]>(
       `/branch`
     );
-    console.log(response.data);
 
     return response.data;
   }

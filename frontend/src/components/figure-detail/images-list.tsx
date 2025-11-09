@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { useState } from "react";
 import DiscountTag from "../ui/discount-tag";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import MyImage from "../ui/MyImage";
 
 interface ImageListProps {
   className?: string;
@@ -33,7 +33,7 @@ export default function ImageList({
   return (
     <div className={`${className} w-full`}>
       <div className="relative w-full aspect-square mx-auto mb-2">
-        <Image
+        <MyImage
           src={currImage || "/no-image.png"}
           alt="figure-image"
           fill
@@ -62,7 +62,7 @@ export default function ImageList({
                   index === currIndex ? "border" : ""
                 }`}
               >
-                <Image
+                <MyImage
                   src={image || "/no-image.png"}
                   alt="figure-image"
                   fill

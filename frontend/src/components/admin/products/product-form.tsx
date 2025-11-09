@@ -2,6 +2,7 @@
 
 import Comment from "@/components/ui/comment";
 import DescriptionInput from "@/components/ui/description-input";
+import MyImage from "@/components/ui/MyImage";
 import {
   useBranches,
   useCategories,
@@ -10,9 +11,10 @@ import {
   useFigureDetail,
   useUpdateFigure,
 } from "@/hooks/figure-hook";
-import { FigureForm } from "@/types/figure";
+import { CreateFigureForm, FigureForm } from "@/types/figure";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { IoIosCloseCircle } from "react-icons/io";
 
 export default function ProductFormPage({ id }: { id: string }) {
   const router = useRouter();
@@ -30,6 +32,16 @@ export default function ProductFormPage({ id }: { id: string }) {
     quantity: 0,
     description: "",
   });
+  const [createFigureForm, setCreateFigureForm] = useState<CreateFigureForm>({
+    name: "",
+    images: null,
+    branchId: "",
+    categoryId: "",
+    price: 0,
+    quantity: 0,
+    description: "",
+  });
+
   const { func: createFigure } = useCreateFigure();
   const { func: updateFigure } = useUpdateFigure();
   const { data: comments } = useComments(id);
@@ -38,7 +50,7 @@ export default function ProductFormPage({ id }: { id: string }) {
     if (id !== "new") {
       updateFigure(form);
     } else {
-      createFigure(form);
+      createFigure(createFigureForm);
     }
   }
 
@@ -53,6 +65,8 @@ export default function ProductFormPage({ id }: { id: string }) {
   // --- Cập nhật form state ---
   const handleChange = (key: keyof FigureForm, value: unknown) =>
     setForm({ ...form, [key]: value });
+  const handleCreateChange = (key: keyof CreateFigureForm, value: unknown) =>
+    setCreateFigureForm({ ...createFigureForm, [key]: value });
 
   // --- Khi chọn branch/category ---
   const handleBranchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,6 +74,10 @@ export default function ProductFormPage({ id }: { id: string }) {
     if (branch) {
       setForm({
         ...form,
+        branchId: branch.id,
+      });
+      setCreateFigureForm({
+        ...createFigureForm,
         branchId: branch.id,
       });
     }
@@ -71,6 +89,19 @@ export default function ProductFormPage({ id }: { id: string }) {
       setForm({
         ...form,
         categoryId: category.id,
+      });
+      setCreateFigureForm({
+        ...createFigureForm,
+        categoryId: category.id,
+      });
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setCreateFigureForm({
+        ...createFigureForm,
+        images: e.target.files,
       });
     }
   };
@@ -102,8 +133,11 @@ export default function ProductFormPage({ id }: { id: string }) {
             <input
               type="text"
               className="w-full border rounded px-3 py-2 text-sm"
-              value={form?.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              value={id === "new" ? createFigureForm?.name : form?.name}
+              onChange={(e) => {
+                handleChange("name", e.target.value);
+                handleCreateChange("name", e.target.value);
+              }}
               required
             />
           </div>
@@ -115,8 +149,13 @@ export default function ProductFormPage({ id }: { id: string }) {
               <input
                 type="number"
                 className="w-full border rounded px-3 py-2 text-sm"
-                value={form?.price}
-                onChange={(e) => handleChange("price", Number(e.target.value))}
+                value={
+                  id === "new" ? createFigureForm?.price : form?.price ?? 0
+                }
+                onChange={(e) => {
+                  handleChange("price", Number(e.target.value));
+                  handleCreateChange("price", Number(e.target.value));
+                }}
               />
             </div>
             <div className="flex-1">
@@ -124,10 +163,15 @@ export default function ProductFormPage({ id }: { id: string }) {
               <input
                 type="number"
                 className="w-full border rounded px-3 py-2 text-sm"
-                value={form?.salePercent ?? 0}
-                onChange={(e) =>
-                  handleChange("salePercent", Number(e.target.value))
+                value={
+                  (id === "new"
+                    ? createFigureForm?.salePercent
+                    : form?.salePercent) ?? 0
                 }
+                onChange={(e) => {
+                  handleChange("salePercent", Number(e.target.value));
+                  handleCreateChange("salePercent", Number(e.target.value));
+                }}
               />
             </div>
             <div className="flex-1">
@@ -135,32 +179,60 @@ export default function ProductFormPage({ id }: { id: string }) {
               <input
                 type="number"
                 className="w-full border rounded px-3 py-2 text-sm"
-                value={form?.quantity}
-                onChange={(e) =>
-                  handleChange("quantity", Number(e.target.value))
+                value={
+                  id === "new" ? createFigureForm?.quantity : form?.quantity
                 }
+                onChange={(e) => {
+                  handleChange("quantity", Number(e.target.value));
+                  handleCreateChange("quantity", Number(e.target.value));
+                }}
               />
             </div>
           </div>
 
           {/* Ảnh */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Ảnh (URLs, cách nhau bởi dấu phẩy)
-            </label>
-            <input
-              type="text"
-              className="w-full border rounded px-3 py-2 text-sm"
-              placeholder="https://..."
-              value={form?.imgSrc.join(",")}
-              onChange={(e) =>
-                handleChange(
-                  "imgSrc",
-                  e.target.value.split(",").map((s) => s.trim())
-                )
-              }
-            />
-          </div>
+          {id === "new" ? (
+            <div>
+              <label className="block text-sm font-medium mb-1">Ảnh</label>
+              <input
+                type="file"
+                multiple
+                className="block w-full text-sm text-theme-500 
+                     file:mr-4 file:py-2 file:px-4
+                     file:rounded-full file:border-0
+                     file:text-sm file:font-semibold
+                     file:bg-theme-50 file:text-theme-700
+                     hover:file:bg-theme-100 cursor-pointer"
+                onChange={handleFileChange}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-4 mb-4 p-4 max-h-96 overflow-auto">
+              {form.imgSrc.length > 0 &&
+                form.imgSrc.map((src) => (
+                  <div key={src} className="relative w-56 h-56 border p-1">
+                    <MyImage
+                      src={src || "no-image.png"}
+                      alt=""
+                      fill
+                      objectFit="contain"
+                      objectPosition="center"
+                    />
+                    <div
+                      className="rounded-full bg-white absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 text-red-500 cursor-pointer"
+                      onClick={() =>
+                        handleChange(
+                          "imgSrc",
+                          form.imgSrc.filter((x) => x !== src)
+                        )
+                      }
+                    >
+                      <IoIosCloseCircle size={30} />
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
 
           {/* Danh mục + Thương hiệu */}
           <div className="flex gap-2">
@@ -170,7 +242,9 @@ export default function ProductFormPage({ id }: { id: string }) {
               </label>
               <select
                 className="w-full border rounded px-3 py-2 text-sm"
-                value={form?.categoryId}
+                value={
+                  id === "new" ? createFigureForm?.categoryId : form?.categoryId
+                }
                 onChange={handleCategoryChange}
               >
                 <option value="">-- Chọn danh mục --</option>
@@ -188,7 +262,9 @@ export default function ProductFormPage({ id }: { id: string }) {
               </label>
               <select
                 className="w-full border rounded px-3 py-2 text-sm"
-                value={form?.branchId}
+                value={
+                  id === "new" ? createFigureForm?.branchId : form?.branchId
+                }
                 onChange={handleBranchChange}
               >
                 <option value="">-- Chọn thương hiệu --</option>
@@ -205,8 +281,13 @@ export default function ProductFormPage({ id }: { id: string }) {
           <div>
             <label className="block text-sm font-medium mb-1">Mô tả</label>
             <DescriptionInput
-              value={form.description}
-              handleChange={(value) => handleChange("description", value)}
+              value={
+                id === "new" ? createFigureForm?.description : form?.description
+              }
+              handleChange={(value) => {
+                handleChange("description", value);
+                handleCreateChange("description", value);
+              }}
             />
           </div>
 

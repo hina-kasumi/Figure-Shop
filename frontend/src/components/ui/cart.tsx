@@ -3,9 +3,9 @@
 import { useCart } from "@/hooks/cart-hook";
 import { useFigures } from "@/hooks/figure-hook";
 import { CartItem } from "@/types/cart";
-import Image from "next/image";
 import Link from "next/link";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import MyImage from "./MyImage";
 
 interface CartProps {
   className?: string;
@@ -98,7 +98,7 @@ export default function Cart({ className }: CartProps) {
                   href={`/figures/${item.productId}`}
                   className="col-span-2 flex items-center gap-4"
                 >
-                  <Image
+                  <MyImage
                     src={figuresInCartMap.get(item.productId)?.imgSrc[0] || "/placeholder.png"}
                     alt={item.name}
                     width={64}
