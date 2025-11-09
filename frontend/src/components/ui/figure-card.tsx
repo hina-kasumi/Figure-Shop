@@ -1,7 +1,6 @@
 "use client";
 
 import { FigureDetailResponse } from "@/types/figure";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -11,6 +10,7 @@ import CircleBtn from "./circle-btn";
 import ColorBox from "./color-box";
 import DiscountTag from "./discount-tag";
 import PriceShow from "./price-show";
+import MyImage from "./MyImage";
 
 interface FigureCardProps {
   className?: string;
@@ -44,7 +44,7 @@ export default function FigureCard({ figure, className }: FigureCardProps) {
         title={figure.name}
       >
         <div className="relative w-full aspect-[1/1] mb-2 overflow-hidden">
-          <Image
+          <MyImage
             src={image}
             alt={figure.name}
             fill
