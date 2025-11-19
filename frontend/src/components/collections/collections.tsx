@@ -17,23 +17,14 @@ interface FilterProps {
 }
 
 const sortList = [
-  {
-    sort: "hot_desc",
-    name: "Phổ biến",
-  },
-  {
-    sort: "price_asc",
-    name: "Giá: Tăng dần",
-  },
-  {
-    sort: "price_desc",
-    name: "Giá: Giảm dần",
-  },
+  { sort: "hot_desc" as const, name: "Phổ biến" },
+  { sort: "price_asc" as const, name: "Giá: Thấp → Cao" },
+  { sort: "price_desc" as const, name: "Giá: Cao → Thấp" },
 ];
 
 export default function CollectionsPage({
   keyword,
-  sortBy,
+  sortBy = "hot_desc",
   minPrice,
   maxPrice,
   branchId,
@@ -43,7 +34,7 @@ export default function CollectionsPage({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const { data: figures } = useFigures(
+  const { data: figures = [] } = useFigures(
     keyword,
     minPrice,
     maxPrice,
@@ -51,102 +42,135 @@ export default function CollectionsPage({
     categoryId,
     sortBy
   );
-  const { data: branches } = useBranches();
-  const { data: categories } = useCategories();
+  const { data: branches = [] } = useBranches();
+  const { data: categories = [] } = useCategories();
 
   function handleChangeQuery(key: string, value: string) {
-    // Tạo object mới từ URLSearchParams cũ
     const params = new URLSearchParams(searchParams.toString());
-    params.set(key, value);
-
-    // Điều hướng tới URL mới mà không reload trang
-    router.push(`${pathname}?${params.toString()}`);
+    if (!value || value === "0") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div className="md:col-span-1 space-y-4">
-        <div className="p-4 bg-white rounded-lg shadow-md">
-          <h3 className="font-semibold text-gray-700 mb-3 text-lg">
-            Lọc theo giá
-          </h3>
+  const formatPrice = (price?: number) =>
+    price ? price.toLocaleString("vi-VN") + "₫" : "Không giới hạn";
 
-          <div className="flex justify-between text-sm text-gray-500 mb-1">
-            <span>0₫</span>
-            <span>10.000.000₫</span>
-          </div>
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8 max-w-screen-2xl mx-auto px-4 py-8">
+      {/* Sidebar - Bộ lọc */}
+      <aside className="space-y-6">
+        {/* Lọc theo giá*/}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow">
+          <h3 className="font-bold text-lg text-gray-800 mb-5">Lọc theo giá</h3>
 
           <input
             type="range"
             min="0"
             max="10000000"
-            step="500000"
-            onChange={(e) => {
-              handleChangeQuery("maxPrice", e.target.value);
+            step="100000"
+            value={maxPrice || 10000000}
+            onChange={(e) => handleChangeQuery("maxPrice", e.target.value)}
+            className="w-full h-3 bg-gray-200 rounded-full cursor-pointer accent-indigo-600"
+            style={{
+              background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${(maxPrice || 10000000) / 100000}%, #e5e7eb ${(maxPrice || 10000000) / 100000}%, #e5e7eb 100%)`,
             }}
-            className="w-full accent-theme-400 cursor-pointer"
           />
 
-          <div className="text-center mt-2">
-            <span className="text-sm text-gray-600">Giá hiện tại:</span>{" "}
-            <span className="font-semibold text-theme-600">
-              {maxPrice?.toLocaleString("vi-VN")}₫
+          <div className="flex justify-between text-xs text-gray-500 mt-3">
+            <span>0₫</span>
+            <span>10.000.000₫</span>
+          </div>
+
+          <div className="mt-4 text-center bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl py-3">
+            <span className="text-sm text-gray-600">Giá tối đa: </span>
+            <span className="text-xl font-bold text-indigo-600">
+              {formatPrice(maxPrice)}
             </span>
           </div>
         </div>
+
         <TickerBox
           title="Thương hiệu"
           curValue={branchId || ""}
           items={branches}
           handleChange={(value) =>
-            handleChangeQuery("branchId", value == branchId ? "" : value)
+            handleChangeQuery("branchId", branchId === value ? "" : value)
           }
         />
+
         <TickerBox
-          title="Loại"
+          title="Loại sản phẩm"
           curValue={categoryId || ""}
           items={categories}
           handleChange={(value) =>
-            handleChangeQuery("categoryId", value == categoryId ? "" : value)
+            handleChangeQuery("categoryId", categoryId === value ? "" : value)
           }
         />
-      </div>
-      <Box
-        className="md:col-span-3 mx-4"
-        title="Tât cả sản phẩm"
-        advandedTitle={
-          <div className="flex items-center gap-4">
-            <div>Sắp xếp:</div>
-            <div className="flex items-center justify-start gap-2 w-3xs overflow-x-auto p-1">
-              {sortList.map((sortItem) => (
-                <button
-                  key={sortItem.sort}
-                  className={`whitespace-nowrap border px-2 py-1 border-gray-200 rounded w-fit cursor-pointer text-gray-700 ${
-                    sortBy === sortItem.sort
-                      ? "bg-theme-300"
-                      : "bg-white hover:bg-gray-100"
-                  }`}
-                  onClick={() => handleChangeQuery("sortBy", sortItem.sort)}
+      </aside>
+
+      {/* Main - Danh sách sản phẩm */}
+      <div className="lg:col-span-3">
+        <Box
+          title="Tất cả sản phẩm"
+          advandedTitle={
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <span className="text-sm text-gray-600">Sắp xếp:</span>
+              <div className="flex gap-2 flex-wrap">
+                {sortList.map((item) => (
+                  <button
+                    key={item.sort}
+                    onClick={() => handleChangeQuery("sortBy", item.sort)}
+                    className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                      sortBy === item.sort
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                        : "bg-white text-gray-700 border border-gray-300 hover:border-indigo-400 hover:bg-indigo-50"
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          }
+          className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 overflow-hidden"
+        >
+          {figures.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 lg:p-8">
+              {figures.map((figure, index) => (
+                <div
+                  key={figure.id}
+                  className="group"
+                  style={{ animationDelay: `${index * 70}ms` }}
                 >
-                  {sortItem.name}
-                </button>
+                  <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-gray-100">
+                    <FigureCard figure={figure} />
+                    {/* Hiệu ứng phát sáng khi hover */}
+                    <div className="absolute -inset-2 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-pink-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
+                  </div>
+                </div>
               ))}
             </div>
+          ) : (
+            <div className="py-20 text-center">
+              <p className="text-gray-500 text-lg font-medium">
+                Không tìm thấy sản phẩm nào
+              </p>
+            </div>
+          )}
+
+          <div className="px-6 pb-8 pt-4">
+            <Pagination
+              totalPages={20}
+              currentPage={1}
+              onPageChange={(page) => handleChangeQuery("page", page.toString())}
+              className="justify-center"
+            />
           </div>
-        }
-      >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5">
-          {figures.map((figure) => (
-            <FigureCard key={figure.id} figure={figure} />
-          ))}
-        </div>
-        <Pagination
-          className="mt-4"
-          totalPages={20}
-          currentPage={1}
-          onPageChange={(page) => handleChangeQuery("page", page.toString())}
-        />
-      </Box>
+        </Box>
+      </div>
     </div>
   );
 }

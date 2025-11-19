@@ -1,5 +1,5 @@
 import Image from "next/image";
-import imgSrc from "../../../public/jhfigure_logo.png";
+import imgSrc from "../../../public/image.png";
 
 interface LogoProps {
   className?: string;
@@ -19,7 +19,7 @@ export default function Logo({ className, height, width }: LogoProps) {
     height = orginalHeight;
   }
   return (
-    <div className={`${className} relative`} style={{ width, height }}>
+    <div className={`${className} relative`} style={{ width: 50, height: 50 }}>
       <Image src={imgSrc} alt="Logo" fill objectFit="contain" />
     </div>
   );

@@ -6,6 +6,7 @@ interface InfoBoxProps {
   title: string;
   items: ItemType[];
   type: "commit" | "notice";
+  className?: string;
 }
 
 interface ItemType {
@@ -13,11 +14,11 @@ interface ItemType {
   text: ReactNode;
 }
 
-export default function InfoBox({ title, items, type }: InfoBoxProps) {
+export default function InfoBox({ title, items, type, className }: InfoBoxProps) {
   const isCommit = type === "commit";
 
   return (
-    <div className="border border-green-500 rounded-md bg-white shadow-sm p-4">
+    <div className={`border border-green-500 rounded-md bg-white shadow-sm p-4 ${className}`}>
       <h2 className="text-green-600 font-semibold mb-3 uppercase">{title}</h2>
       <ul className="space-y-2 text-gray-700 text-sm">
         {items.map((item, idx) => {
